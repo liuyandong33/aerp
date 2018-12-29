@@ -2,7 +2,6 @@ buildscript {
     repositories {
         mavenLocal()
         maven { url "${mavenPublicRepositoryUrl}" }
-        google()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:3.0.0"
@@ -13,7 +12,6 @@ allprojects {
     repositories {
         mavenLocal()
         maven { url "${mavenPublicRepositoryUrl}" }
-        google()
     }
 }
 
