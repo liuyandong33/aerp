@@ -15,9 +15,19 @@
         android:id="@+id/text_view_branch_name">
     </TextView>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="登录"
+        android:background="#00AAEE"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"
+        android:id="@+id/main_activity_button_login">
+    </Button>
+
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/main_activity_button_login">
+        android:id="@+id/main_activity_web_view">
     </WebView>
 </LinearLayout>
