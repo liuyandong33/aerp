@@ -11,10 +11,51 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            keyAlias "build.dream"
+            keyPassword "123456"
+            storeFile file("${rootDir}${File.separator}keystores${File.separator}release.keystore")
+            storePassword "123456"
+        }
+
+        debug {
+            keyAlias "build.dream"
+            keyPassword "123456"
+            storeFile file("${rootDir}${File.separator}keystores${File.separator}snapshot.keystore")
+            storePassword "123456"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.31.200:8080\""
+            buildConfigField "String", "PLATFORM_PUBLIC_KEY", "\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAthaRn6eUdyJSg1MmTE+XOaqqEaBgNuwUint8fDTsKcE4AinpqFGcN1CCzFmD/xwEjsE9IQ7GgJhXvNNqIyLVihNoVJCAVeQiK2RRKyxsOu0/EsTAj7pg+0mbf1p+232eFyUSrBNhwP4miwF7QdsY+0DuxRwkm/uStklubfqXL1gds2lhX4Vt1aFRb5wfelHnluMfxOyI8zSNV1+bKwPmek2MSE51HrNZsSmFcSjkM3GaDYvrLCukNjqIsL9thYGi4DqV9zNW1cWn+QhwVJYThnsgnUQRGobo2DI45a4Q6uRHZFdh9lHigVTSETGZHuvuWF7jAaHdMKikcGSaCinpDwIDAQAB\""
+        }
+
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.31.200:8080\""
+            buildConfigField "String", "PLATFORM_PUBLIC_KEY", "\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAthaRn6eUdyJSg1MmTE+XOaqqEaBgNuwUint8fDTsKcE4AinpqFGcN1CCzFmD/xwEjsE9IQ7GgJhXvNNqIyLVihNoVJCAVeQiK2RRKyxsOu0/EsTAj7pg+0mbf1p+232eFyUSrBNhwP4miwF7QdsY+0DuxRwkm/uStklubfqXL1gds2lhX4Vt1aFRb5wfelHnluMfxOyI8zSNV1+bKwPmek2MSE51HrNZsSmFcSjkM3GaDYvrLCukNjqIsL9thYGi4DqV9zNW1cWn+QhwVJYThnsgnUQRGobo2DI45a4Q6uRHZFdh9lHigVTSETGZHuvuWF7jAaHdMKikcGSaCinpDwIDAQAB\""
+        }
+    }
+
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "debug") {
+            variant.outputs.all {
+                outputFileName = "aerp-debug-" + defaultConfig.versionName + ".apk"
+            }
+        }
+
+        if (variant.buildType.name == "release") {
+            variant.outputs.all {
+                outputFileName = "aerp-release-" + defaultConfig.versionName + ".apk"
+            }
         }
     }
 }
