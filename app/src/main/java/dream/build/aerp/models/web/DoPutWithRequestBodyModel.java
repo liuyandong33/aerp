@@ -1,10 +1,11 @@
 package dream.build.aerp.models.web;
 
-import build.dream.common.constants.Constants;
-
-import javax.net.ssl.SSLSocketFactory;
 import java.net.Proxy;
 import java.util.Map;
+
+import javax.net.ssl.SSLSocketFactory;
+
+import dream.build.aerp.constants.Constants;
 
 public class DoPutWithRequestBodyModel {
     private String requestUrl;
