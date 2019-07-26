@@ -80,10 +80,18 @@ public class DatabaseUtils {
     }
 
     public static long insert(Object domain) {
-        return getWritableDatabase().insert(obtainTableName(domain), null, buildContentValues(domain));
+        return insert(getWritableDatabase(), domain);
+    }
+
+    public static long insert(SQLiteDatabase sqLiteDatabase, Object domain) {
+        return sqLiteDatabase.insert(obtainTableName(domain), null, buildContentValues(domain));
     }
 
     public static long update(Object domain) {
-        return getWritableDatabase().update(obtainTableName(domain), buildContentValues(domain), "id = ?", new String[]{"100"});
+        return update(getWritableDatabase(), domain);
+    }
+
+    public static long update(SQLiteDatabase sqLiteDatabase, Object domain) {
+        return sqLiteDatabase.update(obtainTableName(domain), buildContentValues(domain), "id = ?", new String[]{"100"});
     }
 }
