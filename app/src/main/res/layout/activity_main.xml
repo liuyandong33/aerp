@@ -5,19 +5,12 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/text_view_branch_name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#00AAEE"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp"
         android:gravity="center"
         android:text="门店名称"
-        android:id="@+id/text_view_branch_name">
-    </TextView>
-
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main_activity_web_view">
-    </WebView>
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"></TextView>
 </LinearLayout>

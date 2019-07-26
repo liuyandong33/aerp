@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dream.build.aerp">
+    package="build.dream.aerp">
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,5 +18,21 @@
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
+
+        <meta-data android:name="com.alibaba.app.appkey" android:value="27710843"></meta-data>
+        <meta-data android:name="com.alibaba.app.appsecret" android:value="0ac4c05333a4bfa494be3a1dc454e733"></meta-data>
+        <receiver
+            android:name=".receivers.AliyunPushMessageReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"></action>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"></action>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.alibaba.sdk.android.push.RECEIVE"></action>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
