@@ -12,5 +12,26 @@
         android:gravity="center"
         android:text="门店名称"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"></TextView>
+        android:textSize="20dp">
+    </TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_main_edit_text_login_name">
+    </EditText>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_main_edit_text_password">
+    </EditText>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00AAEE"
+        android:text="登录"
+        android:id="@+id/activity_main_button_login_button">
+    </Button>
 </LinearLayout>
