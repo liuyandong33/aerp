@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                Toast.makeText(MainActivity.this, "DeviceId: " + cloudPushService.getDeviceId(), Toast.LENGTH_LONG).show();
-                Toast.makeText(MainActivity.this, "UTDeviceId: " + cloudPushService.getUTDeviceId(), Toast.LENGTH_LONG).show();
+                String deviceId = cloudPushService.getDeviceId();
+
+                Toast.makeText(MainActivity.this, deviceId, Toast.LENGTH_LONG).show();
             }
         });
     }
