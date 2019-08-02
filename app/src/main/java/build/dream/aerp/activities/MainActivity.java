@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 String deviceId = cloudPushService.getDeviceId();
+                loginNameEditText.setText(deviceId);
 
                 Toast.makeText(MainActivity.this, deviceId, Toast.LENGTH_LONG).show();
             }
