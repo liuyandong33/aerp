@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -63,11 +64,15 @@ public class MainActivity extends AppCompatActivity {
             OAuthToken oAuthToken = (OAuthToken) eventBusEvent.getSource();
             ApplicationHandler.accessToken = oAuthToken.getAccessToken();
 
+            String deviceId = CloudPushUtils.getDeviceId();
+            if (StringUtils.isBlank(deviceId)) {
+                deviceId = UUID.randomUUID().toString();
+            }
             Map<String, String> onlinePosBody = new HashMap<String, String>();
-            onlinePosBody.put("deviceId", UUID.randomUUID().toString());
+            onlinePosBody.put("deviceId", ApplicationHandler.obtainMacAddressSafe(this));
             onlinePosBody.put("type", "android");
             onlinePosBody.put("version", BuildConfig.VERSION_NAME);
-            onlinePosBody.put("cloudPushDeviceId", CloudPushUtils.getDeviceId());
+            onlinePosBody.put("cloudPushDeviceId", deviceId);
             ApplicationHandler.access(ApplicationHandler.accessToken, "catering.pos.onlinePos", JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
         }
 

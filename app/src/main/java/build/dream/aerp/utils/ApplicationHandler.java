@@ -1,17 +1,29 @@
 package build.dream.aerp.utils;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.util.Base64;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -149,5 +161,75 @@ public class ApplicationHandler {
                 EventBusUtils.post(eventBusEvent);
             }
         }).start();
+    }
+
+    public static String obtainMacAddressDefault(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager == null) {
+            return null;
+        }
+
+        WifiInfo info = wifiManager.getConnectionInfo();
+        if (info == null) {
+            return null;
+        }
+
+        String mac = info.getMacAddress();
+        if (StringUtils.isBlank(mac)) {
+            return null;
+        }
+        return mac.toUpperCase(Locale.ENGLISH);
+    }
+
+    public static String obtainMacAddressFromFile() throws IOException {
+        return new BufferedReader(new FileReader(new File("/sys/class/net/wlan0/address"))).readLine();
+    }
+
+    public static String obtainMacAddressFromHardware() throws SocketException {
+        List<NetworkInterface> networkInterfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+        for (NetworkInterface networkInterface : networkInterfaces) {
+            if (!networkInterface.getName().equalsIgnoreCase("wlan0")) {
+                continue;
+            }
+
+            byte[] bytes = networkInterface.getHardwareAddress();
+            if (bytes == null) {
+                return null;
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int index = 0; index < bytes.length; index++) {
+                if (index == 0) {
+                    stringBuilder.append(String.format("%02X", bytes[index]));
+                } else {
+                    stringBuilder.append(String.format(":%02X", bytes[index]));
+                }
+            }
+            return stringBuilder.toString();
+        }
+        return null;
+    }
+
+    public static String obtainMacAddress(Context context) throws IOException {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return obtainMacAddressDefault(context);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return obtainMacAddressFromFile();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return obtainMacAddressFromHardware();
+        }
+        return "02:00:00:00:00:00";
+    }
+
+    public static String obtainMacAddressSafe(Context context) {
+        try {
+            return obtainMacAddress(context);
+        } catch (Exception e) {
+            return "02:00:00:00:00:00";
+        }
     }
 }
