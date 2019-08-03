@@ -57,6 +57,32 @@ public class MainActivity extends AppCompatActivity {
         EventBusUtils.unregister(this);
     }
 
+    /**
+     * 获取用户信息
+     */
+    private void obtainUserInfo() {
+        ApplicationHandler.access(ApplicationHandler.accessToken, Constants.METHOD_CATERING_USER_OBTAIN_USER_INFO, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO);
+    }
+
+    /**
+     * 上线POS
+     */
+    private void onlinePos() {
+        String cloudPushDeviceId = CloudPushUtils.getDeviceId();
+        if (StringUtils.isBlank(cloudPushDeviceId)) {
+            cloudPushDeviceId = UUID.randomUUID().toString();
+        }
+
+        String macAddress = ApplicationHandler.obtainMacAddressSafe(this);
+
+        Map<String, String> onlinePosBody = new HashMap<String, String>();
+        onlinePosBody.put("deviceId", macAddress);
+        onlinePosBody.put("type", "android");
+        onlinePosBody.put("version", BuildConfig.VERSION_NAME);
+        onlinePosBody.put("cloudPushDeviceId", cloudPushDeviceId);
+        ApplicationHandler.access(ApplicationHandler.accessToken, Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(EventBusEvent eventBusEvent) {
         String type = eventBusEvent.getType();
@@ -64,19 +90,12 @@ public class MainActivity extends AppCompatActivity {
             OAuthToken oAuthToken = (OAuthToken) eventBusEvent.getSource();
             ApplicationHandler.accessToken = oAuthToken.getAccessToken();
 
-            String cloudPushDeviceId = CloudPushUtils.getDeviceId();
-            if (StringUtils.isBlank(cloudPushDeviceId)) {
-                cloudPushDeviceId = UUID.randomUUID().toString();
-            }
+            obtainUserInfo();
+        }
 
-            String macAddress = ApplicationHandler.obtainMacAddressSafe(this);
-
-            Map<String, String> onlinePosBody = new HashMap<String, String>();
-            onlinePosBody.put("deviceId", macAddress);
-            onlinePosBody.put("type", "android");
-            onlinePosBody.put("version", BuildConfig.VERSION_NAME);
-            onlinePosBody.put("cloudPushDeviceId", cloudPushDeviceId);
-            ApplicationHandler.access(ApplicationHandler.accessToken, "catering.pos.onlinePos", JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
+        if (Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO.equals(type)) {
+            Toast.makeText(this, JacksonUtils.writeValueAsString(eventBusEvent.getSource()), Toast.LENGTH_LONG).show();
+            onlinePos();
         }
 
         if (Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS.equals(type)) {

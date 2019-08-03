@@ -40,10 +40,16 @@ public class Constants {
     public static final String PUBLIC_KEY = "publicKey";
     public static final String PRIVATE_KEY = "privateKey";
 
+    public static final String EMPTY_JSON_OBJECT = "{}";
+
     public static final String CONTENT_TYPE_APPLICATION_FORM_URLENCODED_UTF8 = "application/x-www-form-urlencoded;charset=UTF-8";
     public static final String CONTENT_TYPE_APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
     public static final String CONTENT_TYPE_MULTIPART_FORM_DATA_UTF8 = "multipart/form-data;boundary=" + WebUtils.BOUNDARY + ";charset=UTF-8";
 
     public static final String EVENT_TYPE_AUTHORIZE = "AUTHORIZE";
     public static final String EVENT_TYPE_CATERING_POS_ONLINE_POS = "catering.pos.onlinePos";
+    public static final String EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO = "catering.user.obtainUserInfo";
+
+    public static final String METHOD_CATERING_POS_ONLINE_POS = "catering.pos.onlinePos";
+    public static final String METHOD_CATERING_USER_OBTAIN_USER_INFO = "catering.user.obtainUserInfo";
 }
