@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String macAddress = ApplicationHandler.obtainMacAddressSafe(MainActivity.this);
-                Toast.makeText(MainActivity.this, macAddress, Toast.LENGTH_LONG).show();
-
                 String loginName = loginNameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 ApplicationHandler.authorize(loginName, password);
