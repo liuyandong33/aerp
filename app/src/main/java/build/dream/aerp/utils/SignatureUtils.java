@@ -3,12 +3,14 @@ package build.dream.aerp.utils;
 import org.apache.commons.lang3.Validate;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.cert.Certificate;
 
 public class SignatureUtils {
     public static final String SIGNATURE_TYPE_SHA1_WITH_RSA = "SHA1WithRSA";
     public static final String SIGNATURE_TYPE_SHA256_WITH_RSA = "SHA256withRSA";
+    public static final String SIGNATURE_TYPE_MD5_WITH_RSA = "MD5withRSA";
 
     /**
      * 获取签名器
@@ -18,8 +20,19 @@ public class SignatureUtils {
      * @throws NoSuchAlgorithmException
      */
     public static Signature obtainSignature(String signatureType) throws NoSuchAlgorithmException {
-        Validate.isTrue(SIGNATURE_TYPE_SHA1_WITH_RSA.equals(signatureType) || SIGNATURE_TYPE_SHA256_WITH_RSA.equals(signatureType), "不支持的签名方式：" + signatureType + "！");
+        Validate.isTrue(SIGNATURE_TYPE_SHA1_WITH_RSA.equals(signatureType) || SIGNATURE_TYPE_SHA256_WITH_RSA.equals(signatureType) || SIGNATURE_TYPE_MD5_WITH_RSA.equals(signatureType), "不支持的签名方式：" + signatureType + "！");
         return Signature.getInstance(signatureType);
+    }
+
+    public static byte[] sign(byte[] data, PrivateKey privateKey, String signatureType) {
+        try {
+            Signature signature = obtainSignature(signatureType);
+            signature.initSign(privateKey);
+            signature.update(data);
+            return signature.sign();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -31,14 +44,7 @@ public class SignatureUtils {
      * @return
      */
     public static byte[] sign(byte[] data, byte[] privateKey, String signatureType) {
-        try {
-            Signature signature = obtainSignature(signatureType);
-            signature.initSign(RSAUtils.restorePrivateKey(privateKey));
-            signature.update(data);
-            return signature.sign();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return sign(data, RSAUtils.restorePrivateKey(privateKey), signatureType);
     }
 
     /**

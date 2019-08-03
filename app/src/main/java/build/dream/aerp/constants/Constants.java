@@ -2,6 +2,8 @@ package build.dream.aerp.constants;
 
 import java.nio.charset.Charset;
 
+import build.dream.aerp.utils.WebUtils;
+
 /**
  * Created by liuyandong on 2019/1/1.
  */
@@ -37,4 +39,10 @@ public class Constants {
 
     public static final String PUBLIC_KEY = "publicKey";
     public static final String PRIVATE_KEY = "privateKey";
+
+    public static final String CONTENT_TYPE_APPLICATION_FORM_URLENCODED_UTF8 = "application/x-www-form-urlencoded;charset=UTF-8";
+    public static final String CONTENT_TYPE_APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
+    public static final String CONTENT_TYPE_MULTIPART_FORM_DATA_UTF8 = "multipart/form-data;boundary=" + WebUtils.BOUNDARY + ";charset=UTF-8";
+
+    public static final String EVENT_TYPE_AUTHORIZE = "AUTHORIZE";
 }

@@ -234,8 +234,8 @@ public class WebUtils {
             httpURLConnection = buildHttpURLConnection(requestUrl, Constants.REQUEST_METHOD_POST, readTimeout, connectTimeout, sslSocketFactory, proxy);
             if (headers == null) {
                 headers = new HashMap<String, String>();
-                headers.put("Content-Type", "multipart/form-data;boundary=" + BOUNDARY);
             }
+            headers.put(HttpHeaders.CONTENT_TYPE, "multipart/form-data;boundary=" + BOUNDARY + ";charset=" + charsetName);
             setRequestProperties(httpURLConnection, headers, charsetName);
             httpURLConnection.setDoInput(true);
             httpURLConnection.setDoOutput(true);
@@ -462,13 +462,16 @@ public class WebUtils {
     }
 
     public static void setRequestProperties(HttpURLConnection httpURLConnection, Map<String, String> headers, String charsetName) {
-        if (MapUtils.isNotEmpty(headers)) {
+        if (MapUtils.isEmpty(headers)) {
+            httpURLConnection.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=" + charsetName);
+        } else {
             Set<Map.Entry<String, String>> entries = headers.entrySet();
             for (Map.Entry<String, String> entry : entries) {
                 httpURLConnection.setRequestProperty(entry.getKey(), entry.getValue());
             }
-        } else {
-            httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charsetName);
+            if (!headers.containsKey(HttpHeaders.CONTENT_TYPE)) {
+                httpURLConnection.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=" + charsetName);
+            }
         }
     }
 
@@ -503,23 +506,12 @@ public class WebUtils {
         return buildQueryString(requestParameters, Constants.CHARSET_NAME_UTF_8);
     }
 
-    public static String buildQueryStringOriginal(Map<String, String> requestParameters) {
-        List<String> requestParameterPairs = new ArrayList<String>();
-        Set<Map.Entry<String, String>> entries = requestParameters.entrySet();
-        for (Map.Entry<String, String> entry : entries) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (StringUtils.isBlank(value)) {
-                requestParameterPairs.add(key + "=");
-            } else {
-                requestParameterPairs.add(key + "=" + value);
-            }
-        }
-        return StringUtils.join(requestParameterPairs, "&");
-    }
-
     public static String buildQueryString(Map<String, String> requestParameters, String charsetName) {
         return concat(requestParameters, charsetName);
+    }
+
+    public static String buildQueryStringOriginal(Map<String, String> requestParameters) {
+        return concat(requestParameters);
     }
 
     public static String buildRequestBody(Map<String, String> requestParameters) {
@@ -537,9 +529,9 @@ public class WebUtils {
             String key = entry.getKey();
             String value = entry.getValue();
             if (StringUtils.isBlank(value)) {
-                requestParameterPairs.add(key + "=");
+                requestParameterPairs.add(UrlUtils.encode(key, charsetName) + "=");
             } else {
-                requestParameterPairs.add(key + "=" + UrlUtils.encode(value, charsetName));
+                requestParameterPairs.add(UrlUtils.encode(key, charsetName) + "=" + UrlUtils.encode(value, charsetName));
             }
         }
         return StringUtils.join(requestParameterPairs, "&");
@@ -575,25 +567,21 @@ public class WebUtils {
     }
 
     public static String obtainResponseCharset(HttpURLConnection httpURLConnection, String defaultCharset) {
-        String charset = null;
         String contentType = httpURLConnection.getContentType();
-        if (StringUtils.isNotBlank(contentType)) {
-            contentType = contentType.toUpperCase();
-            String[] array = contentType.split(";");
-            int length = array.length;
-            for (int index = 0; index < length; index++) {
-                String str = array[index].trim();
-                if (str.startsWith("CHARSET")) {
-                    String[] pair = str.split("=");
-                    charset = pair[1].trim();
-                    break;
-                }
+        if (StringUtils.isBlank(contentType)) {
+            return defaultCharset;
+        }
+
+        contentType = contentType.toUpperCase();
+        String[] array = contentType.split(";");
+        for (int index = 0; index < array.length; index++) {
+            String str = array[index].trim();
+            if (str.startsWith("CHARSET")) {
+                String[] pair = str.split("=");
+                return pair[1].trim();
             }
         }
-        if (StringUtils.isBlank(charset)) {
-            charset = defaultCharset;
-        }
-        return charset;
+        return defaultCharset;
     }
 
     public static void writeFormData(OutputStream outputStream, Map<String, Object> requestParameters, String charsetName) throws IOException {
@@ -604,10 +592,11 @@ public class WebUtils {
             Object value = entry.getValue();
             if (value instanceof String) {
                 outputStream.write(("Content-Disposition: form-data; name=\"" + key + "\"" + ENTER_NEW_LINE + ENTER_NEW_LINE).getBytes(charsetName));
-                outputStream.write((value.toString()).getBytes(charsetName));
+                outputStream.write(value.toString().getBytes(charsetName));
             } else if (value instanceof File) {
                 File file = (File) value;
                 InputStream inputStream = new FileInputStream(file);
+                ;
                 String fileName = file.getName();
                 outputStream.write(("Content-Disposition: form-data; " + "name=\"" + key + "\";filename=\"" + fileName + "\"" + ENTER_NEW_LINE).getBytes(Constants.CHARSET_NAME_UTF_8));
                 outputStream.write(("Content-Type:" + MimeMappingUtils.obtainMimeTypeByFileName(fileName) + ENTER_NEW_LINE + ENTER_NEW_LINE).getBytes(Constants.CHARSET_NAME_UTF_8));

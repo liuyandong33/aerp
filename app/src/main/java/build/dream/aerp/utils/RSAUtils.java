@@ -6,7 +6,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -32,14 +31,18 @@ public class RSAUtils {
     public static final String PADDING_MODE_RSA_ECB_OAEPWITHSHA1ANDMGF1PADDING = "RSA/ECB/OAEPWITHSHA-1ANDMGF1PADDING";
     public static final String PADDING_MODE_RSA_ECB_PKCS1PADDING = "RSA/ECB/PKCS1Padding";
 
-    public static Map<String, byte[]> generateKeyPair(int keySize) throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
-        keyPairGen.initialize(keySize, new SecureRandom());
-        KeyPair keyPair = keyPairGen.generateKeyPair();
-        Map<String, byte[]> keyMap = new HashMap<String, byte[]>();
-        keyMap.put(Constants.PUBLIC_KEY, keyPair.getPublic().getEncoded());
-        keyMap.put(Constants.PRIVATE_KEY, keyPair.getPrivate().getEncoded());
-        return keyMap;
+    public static Map<String, byte[]> generateKeyPair(int keySize) {
+        try {
+            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+            keyPairGen.initialize(keySize, new SecureRandom());
+            KeyPair keyPair = keyPairGen.generateKeyPair();
+            Map<String, byte[]> keyMap = new HashMap<String, byte[]>();
+            keyMap.put(Constants.PUBLIC_KEY, keyPair.getPublic().getEncoded());
+            keyMap.put(Constants.PRIVATE_KEY, keyPair.getPrivate().getEncoded());
+            return keyMap;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

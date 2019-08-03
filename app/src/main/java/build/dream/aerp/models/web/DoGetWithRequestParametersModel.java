@@ -3,13 +3,42 @@ package build.dream.aerp.models.web;
 import java.net.Proxy;
 import java.util.Map;
 
+import build.dream.aerp.constants.Constants;
+
 public class DoGetWithRequestParametersModel {
+    /**
+     * 请求地址
+     */
     private String requestUrl;
+
+    /**
+     * 读取超时时间
+     */
     private int readTimeout;
+
+    /**
+     * 建立连接超时时间
+     */
     private int connectTimeout;
+
+    /**
+     * 请求头
+     */
     private Map<String, String> headers;
+
+    /**
+     * 请求参数
+     */
     private Map<String, String> requestParameters;
-    private String charsetName;
+
+    /**
+     * 字符集
+     */
+    private String charsetName = Constants.CHARSET_NAME_UTF_8;
+
+    /**
+     * 代理
+     */
     private Proxy proxy;
 
     public String getRequestUrl() {
@@ -107,7 +136,15 @@ public class DoGetWithRequestParametersModel {
         }
 
         public DoGetWithRequestParametersModel build() {
-            return instance;
+            DoGetWithRequestParametersModel doGetWithRequestParametersModel = new DoGetWithRequestParametersModel();
+            doGetWithRequestParametersModel.setRequestUrl(instance.getRequestUrl());
+            doGetWithRequestParametersModel.setReadTimeout(instance.getReadTimeout());
+            doGetWithRequestParametersModel.setConnectTimeout(instance.getConnectTimeout());
+            doGetWithRequestParametersModel.setHeaders(instance.getHeaders());
+            doGetWithRequestParametersModel.setRequestParameters(instance.getRequestParameters());
+            doGetWithRequestParametersModel.setCharsetName(instance.getCharsetName());
+            doGetWithRequestParametersModel.setProxy(instance.getProxy());
+            return doGetWithRequestParametersModel;
         }
     }
 

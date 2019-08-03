@@ -36,16 +36,22 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.31.200:8080\""
+            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.1.2:41011/api/v2\""
+            buildConfigField "String", "AUTHORIZE_URL", "\"http://192.168.1.2:8887/oauth/token\""
             buildConfigField "String", "PLATFORM_PUBLIC_KEY", "\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAthaRn6eUdyJSg1MmTE+XOaqqEaBgNuwUint8fDTsKcE4AinpqFGcN1CCzFmD/xwEjsE9IQ7GgJhXvNNqIyLVihNoVJCAVeQiK2RRKyxsOu0/EsTAj7pg+0mbf1p+232eFyUSrBNhwP4miwF7QdsY+0DuxRwkm/uStklubfqXL1gds2lhX4Vt1aFRb5wfelHnluMfxOyI8zSNV1+bKwPmek2MSE51HrNZsSmFcSjkM3GaDYvrLCukNjqIsL9thYGi4DqV9zNW1cWn+QhwVJYThnsgnUQRGobo2DI45a4Q6uRHZFdh9lHigVTSETGZHuvuWF7jAaHdMKikcGSaCinpDwIDAQAB\""
+            buildConfigField "String", "CLIENT_ID", "\"a6f844132d4fea77bad472a94e58e5d1\""
+            buildConfigField "String", "CLIENT_SECRET", "\"6ac143b512f2507cfe2236a3099177b4\""
         }
 
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.31.200:8080\""
+            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.1.2:41011/api/v2\""
+            buildConfigField "String", "AUTHORIZE_URL", "\"http://192.168.1.2:8887/oauth/token\""
             buildConfigField "String", "PLATFORM_PUBLIC_KEY", "\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAthaRn6eUdyJSg1MmTE+XOaqqEaBgNuwUint8fDTsKcE4AinpqFGcN1CCzFmD/xwEjsE9IQ7GgJhXvNNqIyLVihNoVJCAVeQiK2RRKyxsOu0/EsTAj7pg+0mbf1p+232eFyUSrBNhwP4miwF7QdsY+0DuxRwkm/uStklubfqXL1gds2lhX4Vt1aFRb5wfelHnluMfxOyI8zSNV1+bKwPmek2MSE51HrNZsSmFcSjkM3GaDYvrLCukNjqIsL9thYGi4DqV9zNW1cWn+QhwVJYThnsgnUQRGobo2DI45a4Q6uRHZFdh9lHigVTSETGZHuvuWF7jAaHdMKikcGSaCinpDwIDAQAB\""
+            buildConfigField "String", "CLIENT_ID", "\"a6f844132d4fea77bad472a94e58e5d1\""
+            buildConfigField "String", "CLIENT_SECRET", "\"6ac143b512f2507cfe2236a3099177b4\""
         }
     }
 
@@ -78,4 +84,5 @@ dependencies {
     implementation "com.aliyun.ams:alicloud-android-utils:1.1.3"
     implementation "com.aliyun.ams:alicloud-android-beacon:1.0.1"
     implementation "com.aliyun.ams:alicloud-android-ut:5.4.0"
+    implementation "org.greenrobot:eventbus:3.1.1"
 }
