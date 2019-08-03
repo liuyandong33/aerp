@@ -1,6 +1,7 @@
 package build.dream.aerp.utils;
 
-import org.apache.commons.codec.binary.Base64;
+import android.util.Base64;
+
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -562,7 +563,7 @@ public class WebUtils {
     }
 
     public static SSLSocketFactory initSSLSocketFactory(String certificate, String password, String certificateType, TrustManager[] trustManagers) throws IOException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decodeBase64(certificate));
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decode(certificate, Base64.DEFAULT));
         return initSSLSocketFactory(byteArrayInputStream, password, certificateType, trustManagers);
     }
 

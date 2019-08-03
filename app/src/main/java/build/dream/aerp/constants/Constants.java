@@ -45,4 +45,5 @@ public class Constants {
     public static final String CONTENT_TYPE_MULTIPART_FORM_DATA_UTF8 = "multipart/form-data;boundary=" + WebUtils.BOUNDARY + ";charset=UTF-8";
 
     public static final String EVENT_TYPE_AUTHORIZE = "AUTHORIZE";
+    public static final String EVENT_TYPE_CATERING_POS_ONLINE_POS = "catering.pos.onlinePos";
 }

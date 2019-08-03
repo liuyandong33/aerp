@@ -22,8 +22,8 @@ public class MainApplication extends Application {
 
     private void initCloudChannel(Context applicationContext) {
         PushServiceFactory.init(applicationContext);
-        CloudPushService pushService = PushServiceFactory.getCloudPushService();
-        pushService.register(applicationContext, new CommonCallback() {
+        CloudPushService cloudPushService = PushServiceFactory.getCloudPushService();
+        cloudPushService.register(applicationContext, new CommonCallback() {
             @Override
             public void onSuccess(String response) {
                 Log.d(TAG, "init cloudchannel success");

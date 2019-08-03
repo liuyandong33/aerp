@@ -10,9 +10,17 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import build.dream.aerp.BuildConfig;
 import build.dream.aerp.EventBusEvent;
 import build.dream.aerp.R;
+import build.dream.aerp.beans.OAuthToken;
+import build.dream.aerp.constants.Constants;
 import build.dream.aerp.utils.ApplicationHandler;
+import build.dream.aerp.utils.CloudPushUtils;
 import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.JacksonUtils;
 
@@ -50,6 +58,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(EventBusEvent eventBusEvent) {
-        Toast.makeText(this, JacksonUtils.writeValueAsString(eventBusEvent.getSource()), Toast.LENGTH_LONG).show();
+        String type = eventBusEvent.getType();
+        if (Constants.EVENT_TYPE_AUTHORIZE.equals(type)) {
+            OAuthToken oAuthToken = (OAuthToken) eventBusEvent.getSource();
+            ApplicationHandler.accessToken = oAuthToken.getAccessToken();
+
+            Map<String, String> onlinePosBody = new HashMap<String, String>();
+            onlinePosBody.put("deviceId", UUID.randomUUID().toString());
+            onlinePosBody.put("type", "android");
+            onlinePosBody.put("version", BuildConfig.VERSION_NAME);
+            onlinePosBody.put("cloudPushDeviceId", CloudPushUtils.getDeviceId());
+            ApplicationHandler.access(ApplicationHandler.accessToken, "catering.pos.onlinePos", JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
+        }
+
+        if (Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS.equals(type)) {
+            Toast.makeText(this, JacksonUtils.writeValueAsString(eventBusEvent.getSource()), Toast.LENGTH_LONG).show();
+        }
     }
 }

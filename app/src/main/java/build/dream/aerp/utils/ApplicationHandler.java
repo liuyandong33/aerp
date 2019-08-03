@@ -1,8 +1,8 @@
 package build.dream.aerp.utils;
 
 import android.app.Application;
+import android.util.Base64;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.MapUtils;
 
 import java.io.IOException;
@@ -11,6 +11,7 @@ import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -31,8 +32,11 @@ import build.dream.aerp.models.web.DoPostWithRequestBodyModel;
 
 public class ApplicationHandler {
     public static Application application;
-    public static PrivateKey privateKey;
+    public static String publicKeyString;
+    public static String privateKeyString;
     public static PublicKey publicKey;
+    public static PrivateKey privateKey;
+    public static String accessToken;
     public static final Map<String, String> APPLICATION_JSON_UTF8_HTTP_HEADERS;
 
     static {
@@ -49,12 +53,12 @@ public class ApplicationHandler {
         sortedMap.put("method", method);
         sortedMap.put("timestamp", timestamp);
         sortedMap.put("id", id);
-        sortedMap.put("body", body);
+//        sortedMap.put("body", body);
 
-        byte[] data = WebUtils.concat(sortedMap).getBytes(Constants.CHARSET_UTF_8);
+        byte[] data = (WebUtils.concat(sortedMap) + body).getBytes(Constants.CHARSET_UTF_8);
         byte[] sign = SignatureUtils.sign(data, privateKey, SignatureUtils.SIGNATURE_TYPE_SHA256_WITH_RSA);
 
-        String signature = Base64.encodeBase64String(sign);
+        String signature = Base64.encodeToString(sign, Base64.DEFAULT);
         Map<String, String> queryStringMap = new HashMap<String, String>();
         queryStringMap.put("access_token", accessToken);
         queryStringMap.put("method", method);
@@ -80,7 +84,7 @@ public class ApplicationHandler {
             public void run() {
                 WebResponse webResponse = null;
                 try {
-                    WebUtils.doPostWithRequestBody(doPostWithRequestBodyModel);
+                    webResponse = WebUtils.doPostWithRequestBody(doPostWithRequestBodyModel);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -123,6 +127,14 @@ public class ApplicationHandler {
                 }
                 String result = webResponse.getResult();
                 Map<String, Object> resultMap = JacksonUtils.readValueAsMap(result, String.class, Object.class);
+
+
+                Map<String, List<String>> headers = webResponse.getHeaders();
+                publicKeyString = headers.get("Public-Key").get(0);
+                privateKeyString = headers.get("Private-Key").get(0);
+
+                publicKey = RSAUtils.restorePublicKey(publicKeyString);
+                privateKey = RSAUtils.restorePrivateKey(privateKeyString);
 
                 OAuthToken oAuthToken = new OAuthToken();
                 oAuthToken.setAccessToken(MapUtils.getString(resultMap, "access_token"));

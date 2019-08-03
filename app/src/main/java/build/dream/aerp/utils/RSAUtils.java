@@ -1,6 +1,7 @@
 package build.dream.aerp.utils;
 
-import org.apache.commons.codec.binary.Base64;
+import android.util.Base64;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.security.KeyFactory;
@@ -52,7 +53,7 @@ public class RSAUtils {
      * @return
      */
     public static PublicKey restorePublicKey(String publicKey) {
-        byte[] keyBytes = Base64.decodeBase64(publicKey);
+        byte[] keyBytes = Base64.decode(publicKey, Base64.DEFAULT);
         return restorePublicKey(keyBytes);
     }
 
@@ -79,7 +80,7 @@ public class RSAUtils {
      * @return
      */
     public static PrivateKey restorePrivateKey(String privateKey) {
-        byte[] keyBytes = Base64.decodeBase64(privateKey);
+        byte[] keyBytes = Base64.decode(privateKey, Base64.DEFAULT);
         return restorePrivateKey(keyBytes);
     }
 
