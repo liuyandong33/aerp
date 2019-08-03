@@ -19,10 +19,15 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="com.alibaba.app.appkey" android:value="27710843"></meta-data>
-        <meta-data android:name="com.alibaba.app.appsecret" android:value="0ac4c05333a4bfa494be3a1dc454e733"></meta-data>
+        <meta-data
+            android:name="com.alibaba.app.appkey"
+            android:value="27710843"></meta-data>
+        <meta-data
+            android:name="com.alibaba.app.appsecret"
+            android:value="0ac4c05333a4bfa494be3a1dc454e733"></meta-data>
+
         <receiver
-            android:name=".receivers.AliyunPushMessageReceiver"
+            android:name=".receivers.CloudPushMessageReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"></action>

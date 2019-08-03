@@ -9,7 +9,7 @@ import com.alibaba.sdk.android.push.notification.CPushMessage;
 
 import java.util.Map;
 
-public class AliyunPushMessageReceiver extends MessageReceiver {
+public class CloudPushMessageReceiver extends MessageReceiver {
     @Override
     public void onNotification(Context context, String title, String summary, Map<String, String> extraMap) {
         // TODO 处理推送通知
