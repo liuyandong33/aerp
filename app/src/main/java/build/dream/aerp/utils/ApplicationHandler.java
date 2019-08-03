@@ -29,7 +29,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 import build.dream.aerp.BuildConfig;
-import build.dream.aerp.EventBusEvent;
+import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.api.ApiRest;
 import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.beans.WebResponse;

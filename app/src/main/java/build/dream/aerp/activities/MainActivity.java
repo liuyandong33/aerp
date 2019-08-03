@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import build.dream.aerp.BuildConfig;
-import build.dream.aerp.EventBusEvent;
+import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.R;
 import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.constants.Constants;

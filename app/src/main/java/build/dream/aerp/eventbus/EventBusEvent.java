@@ -1,4 +1,4 @@
-package build.dream.aerp;
+package build.dream.aerp.eventbus;
 
 public class EventBusEvent {
     private Object source;

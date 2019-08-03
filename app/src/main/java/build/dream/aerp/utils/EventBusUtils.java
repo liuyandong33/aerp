@@ -2,7 +2,7 @@ package build.dream.aerp.utils;
 
 import org.greenrobot.eventbus.EventBus;
 
-import build.dream.aerp.EventBusEvent;
+import build.dream.aerp.eventbus.EventBusEvent;
 
 public class EventBusUtils {
     public static void register(Object object) {
