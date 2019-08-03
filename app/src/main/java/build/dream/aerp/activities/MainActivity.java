@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import build.dream.aerp.BuildConfig;
-import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.R;
 import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.constants.Constants;
+import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.utils.ApplicationHandler;
 import build.dream.aerp.utils.CloudPushUtils;
 import build.dream.aerp.utils.EventBusUtils;
@@ -64,15 +64,19 @@ public class MainActivity extends AppCompatActivity {
             OAuthToken oAuthToken = (OAuthToken) eventBusEvent.getSource();
             ApplicationHandler.accessToken = oAuthToken.getAccessToken();
 
-            String deviceId = CloudPushUtils.getDeviceId();
-            if (StringUtils.isBlank(deviceId)) {
-                deviceId = UUID.randomUUID().toString();
+            String cloudPushDeviceId = CloudPushUtils.getDeviceId();
+            if (StringUtils.isBlank(cloudPushDeviceId)) {
+                cloudPushDeviceId = UUID.randomUUID().toString();
             }
+
+            String macAddress = ApplicationHandler.obtainMacAddressSafe(this);
+            Toast.makeText(this, macAddress, Toast.LENGTH_LONG).show();
+
             Map<String, String> onlinePosBody = new HashMap<String, String>();
-            onlinePosBody.put("deviceId", ApplicationHandler.obtainMacAddressSafe(this));
+            onlinePosBody.put("deviceId", macAddress);
             onlinePosBody.put("type", "android");
             onlinePosBody.put("version", BuildConfig.VERSION_NAME);
-            onlinePosBody.put("cloudPushDeviceId", deviceId);
+            onlinePosBody.put("cloudPushDeviceId", cloudPushDeviceId);
             ApplicationHandler.access(ApplicationHandler.accessToken, "catering.pos.onlinePos", JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
         }
 
