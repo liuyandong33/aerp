@@ -18,8 +18,13 @@ import java.util.UUID;
 
 import build.dream.aerp.BuildConfig;
 import build.dream.aerp.R;
+import build.dream.aerp.api.ApiRest;
 import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.constants.Constants;
+import build.dream.aerp.domains.Branch;
+import build.dream.aerp.domains.Pos;
+import build.dream.aerp.domains.SystemUser;
+import build.dream.aerp.domains.Tenant;
 import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.utils.ApplicationHandler;
 import build.dream.aerp.utils.CloudPushUtils;
@@ -27,7 +32,6 @@ import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.JacksonUtils;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
     private EditText loginNameEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -47,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String loginName = loginNameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-//                ApplicationHandler.authorize(loginName, password);
-
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                MainActivity.this.startActivity(intent);
+                ApplicationHandler.authorize(loginName, password);
             }
         });
     }
@@ -98,12 +99,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO.equals(type)) {
-            Toast.makeText(this, JacksonUtils.writeValueAsString(eventBusEvent.getSource()), Toast.LENGTH_LONG).show();
+            ApiRest apiRest = (ApiRest) eventBusEvent.getSource();
+            Toast.makeText(this, JacksonUtils.writeValueAsString(apiRest), Toast.LENGTH_LONG).show();
+
+            Map<String, Object> data = (Map<String, Object>) apiRest.getData();
+            Tenant tenant = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("tenant")), Tenant.class);
+            SystemUser systemUser = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("user")), SystemUser.class);
+            Branch branch = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("branch")), Branch.class);
             onlinePos();
         }
 
         if (Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS.equals(type)) {
-            Toast.makeText(this, JacksonUtils.writeValueAsString(eventBusEvent.getSource()), Toast.LENGTH_LONG).show();
+            ApiRest apiRest = (ApiRest) eventBusEvent.getSource();
+            Toast.makeText(this, JacksonUtils.writeValueAsString(apiRest), Toast.LENGTH_LONG).show();
+
+            Map<String, Object> data = (Map<String, Object>) apiRest.getData();
+            Pos pos = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("pos")), Pos.class);
 
             Intent intent = new Intent(this, HomeActivity.class);
             this.startActivity(intent);

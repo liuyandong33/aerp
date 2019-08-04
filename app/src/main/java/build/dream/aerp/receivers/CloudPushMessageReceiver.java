@@ -2,24 +2,31 @@ package build.dream.aerp.receivers;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.alibaba.sdk.android.push.MessageReceiver;
 import com.alibaba.sdk.android.push.notification.CPushMessage;
 
+import org.apache.commons.collections4.MapUtils;
+
 import java.util.Map;
+
+import build.dream.aerp.utils.JacksonUtils;
 
 public class CloudPushMessageReceiver extends MessageReceiver {
     @Override
     public void onNotification(Context context, String title, String summary, Map<String, String> extraMap) {
-        // TODO 处理推送通知
         Log.e("MyMessageReceiver", "Receive notification, title: " + title + ", summary: " + summary + ", extraMap: " + extraMap);
     }
 
     @Override
     public void onMessage(Context context, CPushMessage cPushMessage) {
-        Toast.makeText(context, cPushMessage.getContent(), Toast.LENGTH_LONG).show();
-        Log.e("MyMessageReceiver", "onMessage, messageId: " + cPushMessage.getMessageId() + ", title: " + cPushMessage.getTitle() + ", content:" + cPushMessage.getContent());
+        String content = cPushMessage.getContent();
+        Map<String, Object> contentMap = JacksonUtils.readValueAsMap(content, String.class, Object.class);
+        int type = MapUtils.getIntValue(contentMap, "type");
+        switch (type) {
+            case 1:
+                break;
+        }
     }
 
     @Override
