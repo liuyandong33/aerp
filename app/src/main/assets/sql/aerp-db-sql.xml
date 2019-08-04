@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sql>
     <on.create.sql>
+        <drop.table.oauth.token.sql>
+            DROP TABLE IF EXISTS oauth_token;
+        </drop.table.oauth.token.sql>
+
+        <create.table.oauth.token.sql>
+            CREATE TABLE oauth_token
+            (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, --ID
+                access_token VARCHAR(50), --access token
+                token_type VARCHAR(20), --token type
+                refresh_token VARCHAR(50), --refresh token
+                expires_in INT(50), --expires in
+                scope VARCHAR(20), --scope
+                created_time VARCHAR(20), --创建时间
+                created_user_id BIGINT, --创建人id
+                updated_time VARCHAR(20), --最后更新时间
+                updated_user_id BIGINT, --最后更新人id
+                updated_remark VARCHAR(255), --最后更新备注
+                deleted_time VARCHAR(20), --删除时间，只有当 deleted = 1 时有意义，默认值为1970-01-01 00:00:00',
+                deleted TINYINT DEFAULT 0 --是否删除，0-未删除，1-已删除'
+            );
+        </create.table.oauth.token.sql>
+
         <drop.table.tenant.sql>
             DROP TABLE IF EXISTS tenant;
         </drop.table.tenant.sql>

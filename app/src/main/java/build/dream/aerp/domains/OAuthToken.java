@@ -1,6 +1,10 @@
-package build.dream.aerp.beans;
+package build.dream.aerp.domains;
 
-public class OAuthToken {
+import build.dream.aerp.annotations.Table;
+
+@Table(name = "oauth_token")
+public class OAuthToken extends BasicDomain {
+    public static final String TABLE_NAME = "oauth_token";
     private String accessToken;
     private String tokenType;
     private String refreshToken;

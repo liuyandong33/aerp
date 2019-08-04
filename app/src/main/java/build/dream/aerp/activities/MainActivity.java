@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -19,9 +20,9 @@ import java.util.UUID;
 import build.dream.aerp.BuildConfig;
 import build.dream.aerp.R;
 import build.dream.aerp.api.ApiRest;
-import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.constants.Constants;
 import build.dream.aerp.domains.Branch;
+import build.dream.aerp.domains.OAuthToken;
 import build.dream.aerp.domains.Pos;
 import build.dream.aerp.domains.SystemUser;
 import build.dream.aerp.domains.Tenant;
@@ -31,6 +32,7 @@ import build.dream.aerp.utils.CloudPushUtils;
 import build.dream.aerp.utils.DatabaseUtils;
 import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.JacksonUtils;
+import build.dream.aerp.utils.ObjectUtils;
 
 public class MainActivity extends AppCompatActivity {
     private EditText loginNameEditText;
@@ -40,21 +42,37 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        EventBusUtils.register(this);
 
-        loginNameEditText = findViewById(R.id.activity_main_edit_text_login_name);
-        passwordEditText = findViewById(R.id.activity_main_edit_text_password);
-        loginButton = findViewById(R.id.activity_main_button_login_button);
+        OAuthToken oAuthToken = DatabaseUtils.find(OAuthToken.class);
+        if (ObjectUtils.isNull(oAuthToken) || ((new Date().getTime() - oAuthToken.getCreatedTime().getTime()) / 1000 >= oAuthToken.getExpiresIn())) {
+            DatabaseUtils.delete(OAuthToken.TABLE_NAME);
+            DatabaseUtils.delete(Tenant.TABLE_NAME);
+            DatabaseUtils.delete(SystemUser.TABLE_NAME);
+            DatabaseUtils.delete(Branch.TABLE_NAME);
+            DatabaseUtils.delete(Pos.TABLE_NAME);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+            setContentView(R.layout.activity_main);
+            EventBusUtils.register(this);
+
+            loginNameEditText = findViewById(R.id.activity_main_edit_text_login_name);
+            passwordEditText = findViewById(R.id.activity_main_edit_text_password);
+            loginButton = findViewById(R.id.activity_main_button_login_button);
+            loginButton.setOnClickListener(buildOnClickListener());
+        } else {
+            Intent intent = new Intent(this, HomeActivity.class);
+            this.startActivity(intent);
+        }
+    }
+
+    private View.OnClickListener buildOnClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String loginName = loginNameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 ApplicationHandler.authorize(loginName, password);
             }
-        });
+        };
     }
 
     @Override
@@ -94,6 +112,17 @@ public class MainActivity extends AppCompatActivity {
         String type = eventBusEvent.getType();
         if (Constants.EVENT_TYPE_AUTHORIZE.equals(type)) {
             OAuthToken oAuthToken = (OAuthToken) eventBusEvent.getSource();
+            Date now = new Date();
+
+            oAuthToken.setCreatedTime(now);
+            oAuthToken.setCreatedUserId(Constants.BIGINT_DEFAULT_VALUE);
+            oAuthToken.setUpdatedTime(now);
+            oAuthToken.setUpdatedUserId(Constants.BIGINT_DEFAULT_VALUE);
+            oAuthToken.setUpdatedRemark("登录成功，保存token！");
+            oAuthToken.setDeletedTime(Constants.DATETIME_DEFAULT_VALUE);
+            oAuthToken.setDeleted(false);
+            DatabaseUtils.insert(oAuthToken);
+
             ApplicationHandler.oAuthToken = oAuthToken;
 
             obtainUserInfo();

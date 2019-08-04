@@ -3,6 +3,7 @@ package build.dream.aerp.domains;
 import java.math.BigInteger;
 
 public class SystemUser extends BasicDomain {
+    public static final String TABLE_NAME = "system_user";
     /**
      * 员工姓名
      */

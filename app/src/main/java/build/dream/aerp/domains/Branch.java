@@ -3,6 +3,7 @@ package build.dream.aerp.domains;
 import java.math.BigInteger;
 
 public class Branch extends BasicDomain {
+    public static final String TABLE_NAME = "branch";
     /**
      * 商户id
      */

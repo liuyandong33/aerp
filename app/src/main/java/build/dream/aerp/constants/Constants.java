@@ -1,7 +1,11 @@
 package build.dream.aerp.constants;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.util.Date;
 
+import build.dream.aerp.utils.CustomDateUtils;
 import build.dream.aerp.utils.WebUtils;
 
 /**
@@ -52,4 +56,29 @@ public class Constants {
 
     public static final String METHOD_CATERING_POS_ONLINE_POS = "catering.pos.onlinePos";
     public static final String METHOD_CATERING_USER_OBTAIN_USER_INFO = "catering.user.obtainUserInfo";
+
+    public static final String SQL_OPERATION_SYMBOL_IN = "IN";
+    public static final String SQL_OPERATION_SYMBOL_NOT_IN = "NOT IN";
+    public static final String SQL_OPERATION_SYMBOL_LIKE = "LIKE";
+    public static final String SQL_OPERATION_SYMBOL_NOT_LIKE = "NOT LIKE";
+    public static final String SQL_OPERATION_SYMBOL_EQUAL = "=";
+    public static final String SQL_OPERATION_SYMBOL_NOT_EQUAL = "!=";
+    public static final String SQL_OPERATION_SYMBOL_LESS_THAN = "<";
+    public static final String SQL_OPERATION_SYMBOL_LESS_THAN_EQUAL = "<=";
+    public static final String SQL_OPERATION_SYMBOL_GREATER_THAN = ">";
+    public static final String SQL_OPERATION_SYMBOL_GREATER_THAN_EQUAL = ">=";
+    public static final String SQL_OPERATION_SYMBOL_IS_NULL = "IS NULL";
+    public static final String SQL_OPERATION_SYMBOL_IS_NOT_NULL = "IS NOT NULL";
+    public static final String DESC = "DESC";
+    public static final String ASC = "ASC";
+
+    /**
+     * 数据库默认值
+     */
+    public static final int TINYINT_DEFAULT_VALUE = 0;
+    public static final int INT_DEFAULT_VALUE = 0;
+    public static final BigInteger BIGINT_DEFAULT_VALUE = BigInteger.ZERO;
+    public static final BigDecimal DECIMAL_DEFAULT_VALUE = BigDecimal.ZERO;
+    public static final Date DATETIME_DEFAULT_VALUE = CustomDateUtils.parse("1970-01-01 00:00:00", DEFAULT_DATE_PATTERN);
+    public static final String VARCHAR_DEFAULT_VALUE = "";
 }

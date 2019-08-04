@@ -42,4 +42,12 @@ public class ReflectionUtils {
             throw new IllegalStateException("Unexpected reflection exception - " + ex.getClass().getName() + ": " + ex.getMessage());
         }
     }
+
+    public static void setField(Field field, Object target, Object value) {
+        try {
+            field.set(target, value);
+        } catch (IllegalAccessException ex) {
+            throw new IllegalStateException("Unexpected reflection exception - " + ex.getClass().getName() + ": " + ex.getMessage());
+        }
+    }
 }

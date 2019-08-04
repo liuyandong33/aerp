@@ -34,7 +34,7 @@ import java.util.UUID;
 
 import build.dream.aerp.BuildConfig;
 import build.dream.aerp.api.ApiRest;
-import build.dream.aerp.beans.OAuthToken;
+import build.dream.aerp.domains.OAuthToken;
 import build.dream.aerp.beans.WebResponse;
 import build.dream.aerp.constants.Constants;
 import build.dream.aerp.constants.HttpHeaders;
