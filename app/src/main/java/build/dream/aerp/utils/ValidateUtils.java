@@ -13,7 +13,7 @@ public class ValidateUtils {
             return false;
         }
 
-        if (apiRest.verifySign(BuildConfig.PLATFORM_PUBLIC_KEY, Constants.DEFAULT_DATE_PATTERN)) {
+        if (!apiRest.verifySign(BuildConfig.PLATFORM_PUBLIC_KEY, Constants.DEFAULT_DATE_PATTERN)) {
             ToastUtils.showLongToast(context, "签名错误！");
             return false;
         }
