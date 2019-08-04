@@ -13,11 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import build.dream.aerp.R;
 import build.dream.aerp.utils.ApplicationHandler;
+import build.dream.aerp.utils.StatusBarUtils;
 
 public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtils.setStatusBarColor(this, R.color.color41d09b);
         setContentView(R.layout.activity_home);
 
         TextView branchNameTextView = findViewById(R.id.activity_home_text_view_branch_name);
@@ -36,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Toast.makeText(HomeActivity.this, "精度：" + location.getLongitude() + ",维度：" + location.getLatitude(), Toast.LENGTH_LONG).show();
+                Toast.makeText(HomeActivity.this, "精度：" + location.getLongitude() + ",纬度：" + location.getLatitude(), Toast.LENGTH_LONG).show();
             }
 
             @Override
