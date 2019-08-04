@@ -12,7 +12,9 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 
 import build.dream.aerp.R;
+import build.dream.aerp.domains.Branch;
 import build.dream.aerp.utils.ApplicationHandler;
+import build.dream.aerp.utils.DatabaseUtils;
 import build.dream.aerp.utils.StatusBarUtils;
 
 public class HomeActivity extends AppCompatActivity {
@@ -22,8 +24,9 @@ public class HomeActivity extends AppCompatActivity {
         StatusBarUtils.setStatusBarColor(this, R.color.color41d09b);
         setContentView(R.layout.activity_home);
 
+        Branch branch = DatabaseUtils.find(Branch.class);
         TextView branchNameTextView = findViewById(R.id.activity_home_text_view_branch_name);
-        branchNameTextView.setText("总部");
+        branchNameTextView.setText(branch.getName());
 
         LocationManager locationManager = ApplicationHandler.obtainLocationManager(this);
         String locationProvider = ApplicationHandler.obtainLocationProvider(locationManager);
