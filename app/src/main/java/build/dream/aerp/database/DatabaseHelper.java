@@ -24,7 +24,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_SCRIPT_FILE_NAME = "sql/aerp-db-sql.xml";
     private static final String DATABASE_NAME = "aerp-db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 1;
     private Context context;
 
     public DatabaseHelper(Context context) {
@@ -52,18 +52,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Element rootElement = document.getDocumentElement();
 
             NodeList onCreateSqlNodeList = rootElement.getElementsByTagName("on.create.sql");
-            if (onCreateSqlNodeList.getLength() > 0) {
-                NodeList nodeList = onCreateSqlNodeList.item(0).getChildNodes();
-                int length = nodeList.getLength();
-                if (length > 0) {
-                    for (int index = 0; index < length; index++) {
-                        Node node = nodeList.item(index);
-                        if (node.getNodeType() != Node.ELEMENT_NODE) {
-                            continue;
-                        }
-                        sqLiteDatabase.execSQL(node.getTextContent().trim());
-                    }
+            if (onCreateSqlNodeList.getLength() <= 0) {
+                return;
+            }
+
+            NodeList nodeList = onCreateSqlNodeList.item(0).getChildNodes();
+            int length = nodeList.getLength();
+            if (length <= 0) {
+                return;
+            }
+
+            for (int index = 0; index < length; index++) {
+                Node node = nodeList.item(index);
+                if (node.getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
                 }
+                sqLiteDatabase.execSQL(node.getTextContent().trim());
             }
         } catch (Exception e) {
             throw new RuntimeException("初始化数据库失败！");
@@ -113,7 +117,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("初始化数据库失败！");
+            throw new RuntimeException("更新数据库失败！");
         }
     }
 }
