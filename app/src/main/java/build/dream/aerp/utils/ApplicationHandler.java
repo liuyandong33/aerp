@@ -1,11 +1,15 @@
 package build.dream.aerp.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Base64;
+import android.widget.Toast;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,12 +33,12 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 import build.dream.aerp.BuildConfig;
-import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.api.ApiRest;
 import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.beans.WebResponse;
 import build.dream.aerp.constants.Constants;
 import build.dream.aerp.constants.HttpHeaders;
+import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.models.web.DoGetWithRequestParametersModel;
 import build.dream.aerp.models.web.DoPostWithRequestBodyModel;
 
@@ -231,5 +235,42 @@ public class ApplicationHandler {
         } catch (Exception e) {
             return "02:00:00:00:00:00";
         }
+    }
+
+    public static String obtainLocationProvider(LocationManager locationManager) {
+        List<String> providers = locationManager.getProviders(true);
+        if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            return LocationManager.NETWORK_PROVIDER;
+        }
+
+        if (providers.contains(LocationManager.GPS_PROVIDER)) {
+            return LocationManager.GPS_PROVIDER;
+        }
+
+        return null;
+    }
+
+    public static LocationManager obtainLocationManager(Context context) {
+        return (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void obtainLocation(Context context, LocationListener locationListener) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+
+        String locationProvider = null;
+        if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            //如果是网络定位
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+        } else if (providers.contains(LocationManager.GPS_PROVIDER)) {
+            //如果是GPS定位
+            locationProvider = LocationManager.GPS_PROVIDER;
+        } else {
+            Toast.makeText(context, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
     }
 }

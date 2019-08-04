@@ -1,5 +1,6 @@
 package build.dream.aerp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -46,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String loginName = loginNameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                ApplicationHandler.authorize(loginName, password);
+//                ApplicationHandler.authorize(loginName, password);
+
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
     }
@@ -100,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS.equals(type)) {
             Toast.makeText(this, JacksonUtils.writeValueAsString(eventBusEvent.getSource()), Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, HomeActivity.class);
+            this.startActivity(intent);
         }
     }
 }
