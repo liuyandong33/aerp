@@ -52,6 +52,6 @@ public class OAuthToken extends BasicDomain {
     }
 
     public boolean isEffective() {
-        return (System.currentTimeMillis() - getCreatedTime().getTime()) / 1000 >= expiresIn;
+        return (System.currentTimeMillis() - getCreatedTime().getTime()) / 1000 < expiresIn;
     }
 }
