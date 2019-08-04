@@ -44,7 +44,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         OAuthToken oAuthToken = DatabaseUtils.find(OAuthToken.class);
-        if (ObjectUtils.isNull(oAuthToken) || ((new Date().getTime() - oAuthToken.getCreatedTime().getTime()) / 1000 >= oAuthToken.getExpiresIn())) {
+        if (ObjectUtils.isNotNull(oAuthToken) && oAuthToken.isEffective()) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            this.startActivity(intent);
+        } else {
             DatabaseUtils.delete(OAuthToken.TABLE_NAME);
             DatabaseUtils.delete(Tenant.TABLE_NAME);
             DatabaseUtils.delete(SystemUser.TABLE_NAME);
@@ -58,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
             passwordEditText = findViewById(R.id.activity_main_edit_text_password);
             loginButton = findViewById(R.id.activity_main_button_login_button);
             loginButton.setOnClickListener(buildOnClickListener());
-        } else {
-            Intent intent = new Intent(this, HomeActivity.class);
-            this.startActivity(intent);
         }
     }
 

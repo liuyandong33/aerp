@@ -50,4 +50,8 @@ public class OAuthToken extends BasicDomain {
     public void setScope(String scope) {
         this.scope = scope;
     }
+
+    public boolean isEffective() {
+        return (System.currentTimeMillis() - getCreatedTime().getTime()) / 1000 >= expiresIn;
+    }
 }
