@@ -12,16 +12,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import build.dream.aerp.R;
+import build.dream.aerp.api.ApiRest;
+import build.dream.aerp.constants.Constants;
 import build.dream.aerp.domains.Branch;
 import build.dream.aerp.domains.OAuthToken;
 import build.dream.aerp.domains.Pos;
 import build.dream.aerp.domains.SystemUser;
 import build.dream.aerp.domains.Tenant;
+import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.utils.ApplicationHandler;
 import build.dream.aerp.utils.DatabaseUtils;
+import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.StatusBarUtils;
+import build.dream.aerp.utils.ToastUtils;
 
 public class HomeActivity extends AppCompatActivity {
     private Button logoutButton;
@@ -29,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBusUtils.register(this);
         StatusBarUtils.setStatusBarColor(this, R.color.color41d09b);
         setContentView(R.layout.activity_home);
 
@@ -37,12 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseUtils.delete(OAuthToken.TABLE_NAME);
-                DatabaseUtils.delete(Tenant.TABLE_NAME);
-                DatabaseUtils.delete(SystemUser.TABLE_NAME);
-                DatabaseUtils.delete(Branch.TABLE_NAME);
-                DatabaseUtils.delete(Pos.TABLE_NAME);
-                HomeActivity.this.finish();
+                ApplicationHandler.access(ApplicationHandler.obtainAccessToken(), Constants.METHOD_CATERING_POS_OFFLINE_POS, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS);
             }
         });
 
@@ -82,5 +85,30 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
         locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(EventBusEvent eventBusEvent) {
+        String type = eventBusEvent.getType();
+        if (Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS.equals(type)) {
+            ApiRest apiRest = (ApiRest) eventBusEvent.getSource();
+            if (!apiRest.isSuccessful()) {
+                ToastUtils.showApiRestErrorToast(this, apiRest);
+                return;
+            }
+
+            DatabaseUtils.delete(OAuthToken.TABLE_NAME);
+            DatabaseUtils.delete(Tenant.TABLE_NAME);
+            DatabaseUtils.delete(SystemUser.TABLE_NAME);
+            DatabaseUtils.delete(Branch.TABLE_NAME);
+            DatabaseUtils.delete(Pos.TABLE_NAME);
+            HomeActivity.this.finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBusUtils.unregister(this);
     }
 }
