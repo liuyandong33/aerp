@@ -28,7 +28,7 @@ import build.dream.aerp.utils.ApplicationHandler;
 import build.dream.aerp.utils.DatabaseUtils;
 import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.StatusBarUtils;
-import build.dream.aerp.utils.ToastUtils;
+import build.dream.aerp.utils.ValidateUtils;
 
 public class HomeActivity extends AppCompatActivity {
     private Button logoutButton;
@@ -92,8 +92,7 @@ public class HomeActivity extends AppCompatActivity {
         String type = eventBusEvent.getType();
         if (Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS.equals(type)) {
             ApiRest apiRest = (ApiRest) eventBusEvent.getSource();
-            if (!apiRest.isSuccessful()) {
-                ToastUtils.showApiRestErrorToast(this, apiRest);
+            if (!ValidateUtils.validateApiRest(this, apiRest)) {
                 return;
             }
 
