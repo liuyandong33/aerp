@@ -45,11 +45,11 @@ public class HomeActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApplicationHandler.access(ApplicationHandler.obtainAccessToken(), Constants.METHOD_CATERING_POS_OFFLINE_POS, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS);
+                ApplicationHandler.access(ApplicationHandler.obtainAccessToken(HomeActivity.this), Constants.METHOD_CATERING_POS_OFFLINE_POS, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS);
             }
         });
 
-        Branch branch = DatabaseUtils.find(Branch.class);
+        Branch branch = DatabaseUtils.find(this, Branch.class);
         TextView branchNameTextView = findViewById(R.id.activity_home_text_view_branch_name);
         branchNameTextView.setText(branch.getName());
 
@@ -96,11 +96,11 @@ public class HomeActivity extends AppCompatActivity {
                 return;
             }
 
-            DatabaseUtils.delete(OAuthToken.TABLE_NAME);
-            DatabaseUtils.delete(Tenant.TABLE_NAME);
-            DatabaseUtils.delete(SystemUser.TABLE_NAME);
-            DatabaseUtils.delete(Branch.TABLE_NAME);
-            DatabaseUtils.delete(Pos.TABLE_NAME);
+            DatabaseUtils.delete(this, OAuthToken.TABLE_NAME);
+            DatabaseUtils.delete(this, Tenant.TABLE_NAME);
+            DatabaseUtils.delete(this, SystemUser.TABLE_NAME);
+            DatabaseUtils.delete(this, Branch.TABLE_NAME);
+            DatabaseUtils.delete(this, Pos.TABLE_NAME);
             HomeActivity.this.finish();
         }
     }

@@ -1,6 +1,7 @@
 package build.dream.aerp.utils;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -22,13 +23,13 @@ import build.dream.aerp.database.SearchCondition;
 import build.dream.aerp.database.SearchModel;
 
 public class DatabaseUtils {
-    public static SQLiteDatabase getWritableDatabase() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(ApplicationHandler.application);
+    public static SQLiteDatabase getWritableDatabase(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
         return databaseHelper.getWritableDatabase();
     }
 
-    public static SQLiteDatabase getReadableDatabase() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(ApplicationHandler.application);
+    public static SQLiteDatabase getReadableDatabase(Context context) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
         return databaseHelper.getReadableDatabase();
     }
 
@@ -115,8 +116,8 @@ public class DatabaseUtils {
         return obtainTableName(domain.getClass());
     }
 
-    public static long insert(Object domain) {
-        return insert(getWritableDatabase(), domain);
+    public static long insert(Context context, Object domain) {
+        return insert(getWritableDatabase(context), domain);
     }
 
     public static long insert(SQLiteDatabase sqLiteDatabase, Object domain) {
@@ -125,8 +126,8 @@ public class DatabaseUtils {
         return influenceRowNumber;
     }
 
-    public static int update(Object domain) {
-        return update(getWritableDatabase(), domain);
+    public static int update(Context context, Object domain) {
+        return update(getWritableDatabase(context), domain);
     }
 
     public static int update(SQLiteDatabase sqLiteDatabase, Object domain) {
@@ -191,15 +192,15 @@ public class DatabaseUtils {
         return object;
     }
 
-    public static <T> T find(Class<T> domainClass) {
+    public static <T> T find(Context context, Class<T> domainClass) {
         SearchModel searchModel = SearchModel.builder()
                 .autoSetDeletedFalse()
                 .build();
-        return find(domainClass, searchModel);
+        return find(context, domainClass, searchModel);
     }
 
-    public static <T> T find(Class<T> domainClass, SearchModel searchModel) {
-        return find(getWritableDatabase(), domainClass, searchModel);
+    public static <T> T find(Context context, Class<T> domainClass, SearchModel searchModel) {
+        return find(getWritableDatabase(context), domainClass, searchModel);
     }
 
     public static <T> T find(SQLiteDatabase sqLiteDatabase, Class<T> domainClass, SearchModel searchModel) {
@@ -224,8 +225,8 @@ public class DatabaseUtils {
         return domain;
     }
 
-    public static long delete(String tableName) {
-        return delete(getReadableDatabase(), tableName);
+    public static long delete(Context context, String tableName) {
+        return delete(getReadableDatabase(context), tableName);
     }
 
     public static long delete(SQLiteDatabase sqLiteDatabase, String tableName) {

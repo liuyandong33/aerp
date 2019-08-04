@@ -61,12 +61,15 @@ public class ApplicationHandler {
         APPLICATION_JSON_UTF8_HTTP_HEADERS.put(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON_UTF8);
     }
 
-    public static OAuthToken obtainOAuthToken() {
+    public static OAuthToken obtainOAuthToken(Context context) {
+        if (ObjectUtils.isNull(oAuthToken)) {
+            oAuthToken = DatabaseUtils.find(context, OAuthToken.class);
+        }
         return oAuthToken;
     }
 
-    public static String obtainAccessToken() {
-        return oAuthToken.getAccessToken();
+    public static String obtainAccessToken(Context context) {
+        return obtainOAuthToken(context).getAccessToken();
     }
 
     public static void access(String accessToken, String method, String body, String type) {

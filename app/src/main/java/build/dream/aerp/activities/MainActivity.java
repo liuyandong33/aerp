@@ -45,16 +45,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        OAuthToken oAuthToken = DatabaseUtils.find(OAuthToken.class);
+        OAuthToken oAuthToken = ApplicationHandler.obtainOAuthToken(this);
         if (ObjectUtils.isNotNull(oAuthToken) && oAuthToken.isEffective()) {
             Intent intent = new Intent(this, HomeActivity.class);
             this.startActivity(intent);
         } else {
-            DatabaseUtils.delete(OAuthToken.TABLE_NAME);
-            DatabaseUtils.delete(Tenant.TABLE_NAME);
-            DatabaseUtils.delete(SystemUser.TABLE_NAME);
-            DatabaseUtils.delete(Branch.TABLE_NAME);
-            DatabaseUtils.delete(Pos.TABLE_NAME);
+            DatabaseUtils.delete(this, OAuthToken.TABLE_NAME);
+            DatabaseUtils.delete(this, Tenant.TABLE_NAME);
+            DatabaseUtils.delete(this, SystemUser.TABLE_NAME);
+            DatabaseUtils.delete(this, Branch.TABLE_NAME);
+            DatabaseUtils.delete(this, Pos.TABLE_NAME);
 
             setContentView(R.layout.activity_main);
             EventBusUtils.register(this);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
      * 获取用户信息
      */
     private void obtainUserInfo() {
-        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(), Constants.METHOD_CATERING_USER_OBTAIN_USER_INFO, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO);
+        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_USER_OBTAIN_USER_INFO, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO);
     }
 
     /**
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         onlinePosBody.put("type", "android");
         onlinePosBody.put("version", BuildConfig.VERSION_NAME);
         onlinePosBody.put("cloudPushDeviceId", cloudPushDeviceId);
-        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(), Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
+        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             oAuthToken.setUpdatedRemark("登录成功，保存token！");
             oAuthToken.setDeletedTime(Constants.DATETIME_DEFAULT_VALUE);
             oAuthToken.setDeleted(false);
-            DatabaseUtils.insert(oAuthToken);
+            DatabaseUtils.insert(this, oAuthToken);
 
             ApplicationHandler.oAuthToken = oAuthToken;
 
@@ -148,9 +148,9 @@ public class MainActivity extends AppCompatActivity {
             SystemUser systemUser = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("user")), SystemUser.class);
             Branch branch = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("branch")), Branch.class);
 
-            DatabaseUtils.insert(tenant);
-            DatabaseUtils.insert(systemUser);
-            DatabaseUtils.insert(branch);
+            DatabaseUtils.insert(this, tenant);
+            DatabaseUtils.insert(this, systemUser);
+            DatabaseUtils.insert(this, branch);
             onlinePos();
         }
 
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
             Map<String, Object> data = (Map<String, Object>) apiRest.getData();
             Pos pos = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("pos")), Pos.class);
-            DatabaseUtils.insert(pos);
+            DatabaseUtils.insert(this, pos);
 
             Intent intent = new Intent(this, HomeActivity.class);
             this.startActivity(intent);
