@@ -20,6 +20,7 @@ import java.util.UUID;
 import build.dream.aerp.BuildConfig;
 import build.dream.aerp.R;
 import build.dream.aerp.api.ApiRest;
+import build.dream.aerp.beans.OAuthTokenError;
 import build.dream.aerp.constants.Constants;
 import build.dream.aerp.domains.Branch;
 import build.dream.aerp.domains.OAuthToken;
@@ -111,9 +112,16 @@ public class MainActivity extends AppCompatActivity {
     public void onEvent(EventBusEvent eventBusEvent) {
         String type = eventBusEvent.getType();
         if (Constants.EVENT_TYPE_AUTHORIZE.equals(type)) {
-            OAuthToken oAuthToken = (OAuthToken) eventBusEvent.getSource();
-            Date now = new Date();
+            Object source = eventBusEvent.getSource();
+            if (source instanceof OAuthTokenError) {
+                OAuthTokenError oAuthTokenError = (OAuthTokenError) source;
+                Toast.makeText(this, oAuthTokenError.getErrorDescription(), Toast.LENGTH_LONG).show();
+                return;
+            }
 
+            OAuthToken oAuthToken = (OAuthToken) source;
+
+            Date now = new Date();
             oAuthToken.setCreatedTime(now);
             oAuthToken.setCreatedUserId(Constants.BIGINT_DEFAULT_VALUE);
             oAuthToken.setUpdatedTime(now);
@@ -130,7 +138,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO.equals(type)) {
             ApiRest apiRest = (ApiRest) eventBusEvent.getSource();
-            Toast.makeText(this, JacksonUtils.writeValueAsString(apiRest), Toast.LENGTH_LONG).show();
+
+            if (!apiRest.isSuccessful()) {
+                Toast.makeText(this, apiRest.getError().getMessage(), Toast.LENGTH_LONG).show();
+                return;
+            }
 
             Map<String, Object> data = (Map<String, Object>) apiRest.getData();
             Tenant tenant = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("tenant")), Tenant.class);
@@ -145,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS.equals(type)) {
             ApiRest apiRest = (ApiRest) eventBusEvent.getSource();
-            Toast.makeText(this, JacksonUtils.writeValueAsString(apiRest), Toast.LENGTH_LONG).show();
+            if (!apiRest.isSuccessful()) {
+                Toast.makeText(this, apiRest.getError().getMessage(), Toast.LENGTH_LONG).show();
+                return;
+            }
 
             Map<String, Object> data = (Map<String, Object>) apiRest.getData();
             Pos pos = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("pos")), Pos.class);

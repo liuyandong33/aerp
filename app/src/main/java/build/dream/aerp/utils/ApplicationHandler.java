@@ -34,10 +34,11 @@ import java.util.UUID;
 
 import build.dream.aerp.BuildConfig;
 import build.dream.aerp.api.ApiRest;
-import build.dream.aerp.domains.OAuthToken;
+import build.dream.aerp.beans.OAuthTokenError;
 import build.dream.aerp.beans.WebResponse;
 import build.dream.aerp.constants.Constants;
 import build.dream.aerp.constants.HttpHeaders;
+import build.dream.aerp.domains.OAuthToken;
 import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.models.web.DoGetWithRequestParametersModel;
 import build.dream.aerp.models.web.DoPostWithRequestBodyModel;
@@ -151,24 +152,31 @@ public class ApplicationHandler {
                 String result = webResponse.getResult();
                 Map<String, Object> resultMap = JacksonUtils.readValueAsMap(result, String.class, Object.class);
 
-
-                Map<String, List<String>> headers = webResponse.getHeaders();
-                publicKeyString = headers.get("Public-Key").get(0);
-                privateKeyString = headers.get("Private-Key").get(0);
-
-                publicKey = RSAUtils.restorePublicKey(publicKeyString);
-                privateKey = RSAUtils.restorePrivateKey(privateKeyString);
-
-                OAuthToken oAuthToken = new OAuthToken();
-                oAuthToken.setAccessToken(MapUtils.getString(resultMap, "access_token"));
-                oAuthToken.setTokenType(MapUtils.getString(resultMap, "token_type"));
-                oAuthToken.setRefreshToken(MapUtils.getString(resultMap, "refresh_token"));
-                oAuthToken.setExpiresIn(MapUtils.getIntValue(resultMap, "expires_in"));
-                oAuthToken.setScope(MapUtils.getString(resultMap, "scope"));
-
                 EventBusEvent eventBusEvent = new EventBusEvent();
-                eventBusEvent.setSource(oAuthToken);
                 eventBusEvent.setType(Constants.EVENT_TYPE_AUTHORIZE);
+                if (resultMap.containsKey("error")) {
+                    OAuthTokenError oAuthTokenError = new OAuthTokenError();
+                    oAuthTokenError.setError(MapUtils.getString(resultMap, "error"));
+                    oAuthTokenError.setErrorDescription(MapUtils.getString(resultMap, "error_description"));
+
+                    eventBusEvent.setSource(oAuthTokenError);
+                } else {
+                    Map<String, List<String>> headers = webResponse.getHeaders();
+                    publicKeyString = headers.get("Public-Key").get(0);
+                    privateKeyString = headers.get("Private-Key").get(0);
+
+                    publicKey = RSAUtils.restorePublicKey(publicKeyString);
+                    privateKey = RSAUtils.restorePrivateKey(privateKeyString);
+
+                    OAuthToken oAuthToken = new OAuthToken();
+                    oAuthToken.setAccessToken(MapUtils.getString(resultMap, "access_token"));
+                    oAuthToken.setTokenType(MapUtils.getString(resultMap, "token_type"));
+                    oAuthToken.setRefreshToken(MapUtils.getString(resultMap, "refresh_token"));
+                    oAuthToken.setExpiresIn(MapUtils.getIntValue(resultMap, "expires_in"));
+                    oAuthToken.setScope(MapUtils.getString(resultMap, "scope"));
+
+                    eventBusEvent.setSource(oAuthToken);
+                }
                 EventBusUtils.post(eventBusEvent);
             }
         }).start();

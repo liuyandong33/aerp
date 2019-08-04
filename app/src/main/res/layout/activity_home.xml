@@ -14,18 +14,17 @@
         android:gravity="center"
         android:text="门店名称"
         android:textColor="#FFFFFF"
-        android:textSize="20dp">
-    </TextView>
+        android:textSize="20dp"></TextView>
 
-    <FrameLayout
+    <Button
+        android:id="@+id/activity_home_button_logout_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color41d09b">
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-    </LinearLayout>
-
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:background="#00AAEE"
+        android:text="退出"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"></Button>
 </LinearLayout>
