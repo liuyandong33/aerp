@@ -21,7 +21,6 @@ import build.dream.aerp.R;
 import build.dream.aerp.api.ApiRest;
 import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.constants.Constants;
-import build.dream.aerp.database.DatabaseHelper;
 import build.dream.aerp.domains.Branch;
 import build.dream.aerp.domains.Pos;
 import build.dream.aerp.domains.SystemUser;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
      * 获取用户信息
      */
     private void obtainUserInfo() {
-        ApplicationHandler.access(ApplicationHandler.accessToken, Constants.METHOD_CATERING_USER_OBTAIN_USER_INFO, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO);
+        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(), Constants.METHOD_CATERING_USER_OBTAIN_USER_INFO, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO);
     }
 
     /**
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         onlinePosBody.put("type", "android");
         onlinePosBody.put("version", BuildConfig.VERSION_NAME);
         onlinePosBody.put("cloudPushDeviceId", cloudPushDeviceId);
-        ApplicationHandler.access(ApplicationHandler.accessToken, Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
+        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(), Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         String type = eventBusEvent.getType();
         if (Constants.EVENT_TYPE_AUTHORIZE.equals(type)) {
             OAuthToken oAuthToken = (OAuthToken) eventBusEvent.getSource();
-            ApplicationHandler.accessToken = oAuthToken.getAccessToken();
+            ApplicationHandler.oAuthToken = oAuthToken;
 
             obtainUserInfo();
         }

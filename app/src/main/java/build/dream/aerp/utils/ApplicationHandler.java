@@ -52,12 +52,20 @@ public class ApplicationHandler {
     public static String privateKeyString;
     public static PublicKey publicKey;
     public static PrivateKey privateKey;
-    public static String accessToken;
+    public static OAuthToken oAuthToken;
     public static final Map<String, String> APPLICATION_JSON_UTF8_HTTP_HEADERS;
 
     static {
         APPLICATION_JSON_UTF8_HTTP_HEADERS = new HashMap<String, String>();
         APPLICATION_JSON_UTF8_HTTP_HEADERS.put(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON_UTF8);
+    }
+
+    public static OAuthToken obtainOAuthToken() {
+        return oAuthToken;
+    }
+
+    public static String obtainAccessToken() {
+        return oAuthToken.getAccessToken();
     }
 
     public static void access(String accessToken, String method, String body, String type) {
@@ -69,7 +77,6 @@ public class ApplicationHandler {
         sortedMap.put("method", method);
         sortedMap.put("timestamp", timestamp);
         sortedMap.put("id", id);
-//        sortedMap.put("body", body);
 
         byte[] data = (WebUtils.concat(sortedMap) + body).getBytes(Constants.CHARSET_UTF_8);
         byte[] sign = SignatureUtils.sign(data, privateKey, SignatureUtils.SIGNATURE_TYPE_SHA256_WITH_RSA);
