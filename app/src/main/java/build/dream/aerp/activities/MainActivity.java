@@ -21,6 +21,7 @@ import build.dream.aerp.R;
 import build.dream.aerp.api.ApiRest;
 import build.dream.aerp.beans.OAuthToken;
 import build.dream.aerp.constants.Constants;
+import build.dream.aerp.database.DatabaseHelper;
 import build.dream.aerp.domains.Branch;
 import build.dream.aerp.domains.Pos;
 import build.dream.aerp.domains.SystemUser;
@@ -28,6 +29,7 @@ import build.dream.aerp.domains.Tenant;
 import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.utils.ApplicationHandler;
 import build.dream.aerp.utils.CloudPushUtils;
+import build.dream.aerp.utils.DatabaseUtils;
 import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.JacksonUtils;
 
@@ -106,6 +108,10 @@ public class MainActivity extends AppCompatActivity {
             Tenant tenant = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("tenant")), Tenant.class);
             SystemUser systemUser = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("user")), SystemUser.class);
             Branch branch = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("branch")), Branch.class);
+
+            DatabaseUtils.insert(tenant);
+            DatabaseUtils.insert(systemUser);
+            DatabaseUtils.insert(branch);
             onlinePos();
         }
 
@@ -115,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
             Map<String, Object> data = (Map<String, Object>) apiRest.getData();
             Pos pos = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("pos")), Pos.class);
+            DatabaseUtils.insert(pos);
 
             Intent intent = new Intent(this, HomeActivity.class);
             this.startActivity(intent);

@@ -39,6 +39,7 @@ public class DatabaseUtils {
             Class<?> type = field.getType();
             String columnName = NamingStrategyUtils.camelCaseToUnderscore(field.getName());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
+            ReflectionUtils.makeAccessible(field);
             if (type == byte.class || type == Byte.class) {
                 Byte value = ReflectionUtils.getField(field, domain);
                 contentValues.put(columnName, value);
@@ -68,7 +69,11 @@ public class DatabaseUtils {
                 contentValues.put(columnName, value);
             } else if (type == Date.class) {
                 Date value = ReflectionUtils.getField(field, domain);
-                contentValues.put(columnName, simpleDateFormat.format(value));
+                if (value == null) {
+                    contentValues.put(columnName, (String) null);
+                } else {
+                    contentValues.put(columnName, simpleDateFormat.format(value));
+                }
             }
         }
         return contentValues;

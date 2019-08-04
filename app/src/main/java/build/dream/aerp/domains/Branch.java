@@ -104,11 +104,6 @@ public class Branch extends BasicDomain {
      */
     private String businessTimes;
     /**
-     * 是否正在营业
-     */
-    private boolean opened;
-
-    /**
      * 达达门店ID
      */
     private String dadaOriginShopId;
@@ -311,14 +306,6 @@ public class Branch extends BasicDomain {
 
     public void setBusinessTimes(String businessTimes) {
         this.businessTimes = businessTimes;
-    }
-
-    public boolean isOpened() {
-        return opened;
-    }
-
-    public void setOpened(boolean opened) {
-        this.opened = opened;
     }
 
     public String getDadaOriginShopId() {

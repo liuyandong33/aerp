@@ -14,6 +14,14 @@ public class BasicDomain implements Serializable, Cloneable {
     private Date deletedTime;
     private boolean deleted;
 
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
+    }
+
     public Date getCreatedTime() {
         return createdTime;
     }
