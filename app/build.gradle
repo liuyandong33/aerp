@@ -36,22 +36,22 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.1.2:41011/api/v1\""
-            buildConfigField "String", "AUTHORIZE_URL", "\"http://192.168.1.2:8887/oauth/token\""
+            buildConfigField "String", "APP_API_SERVICE_URL", "\"https://lyd.liubanglong.cn/webapi/api/v1\""
+            buildConfigField "String", "AUTHORIZE_URL", "\"https://lyd.liubanglong.cn/auth/oauth/token\""
             buildConfigField "String", "PLATFORM_PUBLIC_KEY", "\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtJ0/E/yt86Z05Ive4bIgRA7zT0RweUmVU8FsZo1Eh/C5ZrCVeZU93Ul6naK+7hCr9311fLlxmp5KEdAdWRukHMTwlBpSNihTBSsxCmfX+dNw3lqXcWVBbf8mDO4GZUdGRlWlWgdTTMoTZccII4oHHNlCVkSCrCys3SMf47nVm2Qrw8y+dwGetU3V0cIUOoGUbS5nWgthV3qEbjjsKASTwk0p10d2tdNrqU08jqwi9ckaDiuz3GY8KFCJcYf4xay3+bZxFjGcZTjP0UEEQ1dNio4sCSbnWzMvkV1ahTW8GqjYj6LuLRKLLBnPqV5pmD554WP0w37sqXWyO0vi7mNUQwIDAQAB\""
-            buildConfigField "String", "CLIENT_ID", "\"a6f844132d4fea77bad472a94e58e5d1\""
-            buildConfigField "String", "CLIENT_SECRET", "\"6ac143b512f2507cfe2236a3099177b4\""
+            buildConfigField "String", "CLIENT_ID", "\"cbbf66e3d01dc6a86a97eef3baaf8879\""
+            buildConfigField "String", "CLIENT_SECRET", "\"f884a7b1bf3cb71fc86dd2ddb61185e2\""
         }
 
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            buildConfigField "String", "APP_API_SERVICE_URL", "\"http://192.168.1.2:41011/api/v1\""
-            buildConfigField "String", "AUTHORIZE_URL", "\"http://192.168.1.2:8887/oauth/token\""
+            buildConfigField "String", "APP_API_SERVICE_URL", "\"https://lyd.liubanglong.cn/webapi/api/v1\""
+            buildConfigField "String", "AUTHORIZE_URL", "\"https://lyd.liubanglong.cn/auth/oauth/token\""
             buildConfigField "String", "PLATFORM_PUBLIC_KEY", "\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtJ0/E/yt86Z05Ive4bIgRA7zT0RweUmVU8FsZo1Eh/C5ZrCVeZU93Ul6naK+7hCr9311fLlxmp5KEdAdWRukHMTwlBpSNihTBSsxCmfX+dNw3lqXcWVBbf8mDO4GZUdGRlWlWgdTTMoTZccII4oHHNlCVkSCrCys3SMf47nVm2Qrw8y+dwGetU3V0cIUOoGUbS5nWgthV3qEbjjsKASTwk0p10d2tdNrqU08jqwi9ckaDiuz3GY8KFCJcYf4xay3+bZxFjGcZTjP0UEEQ1dNio4sCSbnWzMvkV1ahTW8GqjYj6LuLRKLLBnPqV5pmD554WP0w37sqXWyO0vi7mNUQwIDAQAB\""
-            buildConfigField "String", "CLIENT_ID", "\"a6f844132d4fea77bad472a94e58e5d1\""
-            buildConfigField "String", "CLIENT_SECRET", "\"6ac143b512f2507cfe2236a3099177b4\""
+            buildConfigField "String", "CLIENT_ID", "\"cbbf66e3d01dc6a86a97eef3baaf8879\""
+            buildConfigField "String", "CLIENT_SECRET", "\"f884a7b1bf3cb71fc86dd2ddb61185e2\""
         }
     }
 
