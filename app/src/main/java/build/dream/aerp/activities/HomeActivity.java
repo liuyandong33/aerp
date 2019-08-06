@@ -1,6 +1,7 @@
 package build.dream.aerp.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -45,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApplicationHandler.access(ApplicationHandler.obtainAccessToken(HomeActivity.this), Constants.METHOD_CATERING_POS_OFFLINE_POS, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS);
+                ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(HomeActivity.this), Constants.METHOD_CATERING_POS_OFFLINE_POS, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS);
             }
         });
 
@@ -101,7 +102,16 @@ public class HomeActivity extends AppCompatActivity {
             DatabaseUtils.delete(this, SystemUser.TABLE_NAME);
             DatabaseUtils.delete(this, Branch.TABLE_NAME);
             DatabaseUtils.delete(this, Pos.TABLE_NAME);
-            HomeActivity.this.finish();
+
+            ApplicationHandler.publicKeyString = null;
+            ApplicationHandler.privateKeyString = null;
+            ApplicationHandler.publicKey = null;
+            ApplicationHandler.privateKey = null;
+            ApplicationHandler.oAuthToken = null;
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 

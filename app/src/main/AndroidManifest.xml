@@ -44,6 +44,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".services.OrderService"></service>
+
         <activity android:name=".activities.HomeActivity"></activity>
     </application>
 

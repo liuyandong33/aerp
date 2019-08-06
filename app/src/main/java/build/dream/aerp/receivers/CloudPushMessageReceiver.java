@@ -8,9 +8,11 @@ import com.alibaba.sdk.android.push.notification.CPushMessage;
 
 import org.apache.commons.collections4.MapUtils;
 
+import java.math.BigInteger;
 import java.util.Map;
 
 import build.dream.aerp.utils.JacksonUtils;
+import build.dream.aerp.utils.OrderUtils;
 import build.dream.aerp.utils.ToastUtils;
 
 public class CloudPushMessageReceiver extends MessageReceiver {
@@ -26,6 +28,7 @@ public class CloudPushMessageReceiver extends MessageReceiver {
         int type = MapUtils.getIntValue(contentMap, "type");
         switch (type) {
             case 1:
+                OrderUtils.saveOrder(context, MapUtils.getLongValue(contentMap, "orderId"));
                 break;
         }
         ToastUtils.showLongToast(context, content);

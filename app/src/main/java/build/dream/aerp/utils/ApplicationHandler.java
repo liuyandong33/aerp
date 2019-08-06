@@ -56,6 +56,7 @@ public class ApplicationHandler {
     public static PrivateKey privateKey;
     public static OAuthToken oAuthToken;
     public static final Map<String, String> APPLICATION_JSON_UTF8_HTTP_HEADERS;
+    public static final String DEFAULT_MAC_ADDRESS = "02:00:00:00:00:00";
 
     static {
         APPLICATION_JSON_UTF8_HTTP_HEADERS = new HashMap<String, String>();
@@ -80,14 +81,14 @@ public class ApplicationHandler {
 
     public static PublicKey obtainPublicKey() {
         if (ObjectUtils.isNull(publicKey)) {
-            publicKey = RSAUtils.restorePublicKey(publicKeyString);
+            publicKey = RSAUtils.restorePublicKey(obtainPublicKeyString());
         }
         return publicKey;
     }
 
     public static PrivateKey obtainPrivateKey() {
         if (ObjectUtils.isNull(privateKey)) {
-            privateKey = RSAUtils.restorePrivateKey(privateKeyString);
+            privateKey = RSAUtils.restorePrivateKey(obtainPrivateKeyString());
         }
         return privateKey;
     }
@@ -103,7 +104,7 @@ public class ApplicationHandler {
         return obtainOAuthToken(context).getAccessToken();
     }
 
-    public static void access(String accessToken, String method, String body, String type) {
+    public static DoPostWithRequestBodyModel buildDoPostWithRequestBodyModel(String accessToken, String method, String body) {
         String timestamp = new SimpleDateFormat(Constants.DEFAULT_DATE_PATTERN).format(new Date());
         String id = UUID.randomUUID().toString();
 
@@ -126,17 +127,29 @@ public class ApplicationHandler {
 
         String url = BuildConfig.APP_API_SERVICE_URL + "?" + WebUtils.buildQueryString(queryStringMap, Constants.CHARSET_NAME_UTF_8);
 
-        DoPostWithRequestBodyModel doPostWithRequestBodyModel = DoPostWithRequestBodyModel.builder()
+        return DoPostWithRequestBodyModel.builder()
                 .requestUrl(url)
                 .readTimeout(0)
                 .connectTimeout(0)
                 .headers(APPLICATION_JSON_UTF8_HTTP_HEADERS)
                 .requestBody(body)
                 .build();
-        access(doPostWithRequestBodyModel, type);
     }
 
-    public static void access(final DoPostWithRequestBodyModel doPostWithRequestBodyModel, final String type) {
+    public static ApiRest accessSync(String accessToken, String method, String body) {
+        DoPostWithRequestBodyModel doPostWithRequestBodyModel = buildDoPostWithRequestBodyModel(accessToken, method, body);
+        WebResponse webResponse = null;
+        try {
+            webResponse = WebUtils.doPostWithRequestBody(doPostWithRequestBodyModel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String result = webResponse.getResult();
+        return ApiRest.fromJson(result);
+    }
+
+    public static void accessAsync(String accessToken, String method, String body, final String type) {
+        final DoPostWithRequestBodyModel doPostWithRequestBodyModel = buildDoPostWithRequestBodyModel(accessToken, method, body);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -164,16 +177,13 @@ public class ApplicationHandler {
         requestParameters.put("client_id", BuildConfig.CLIENT_ID);
         requestParameters.put("client_secret", BuildConfig.CLIENT_SECRET);
 
-        DoGetWithRequestParametersModel doGetWithRequestParametersModel = DoGetWithRequestParametersModel.builder()
+        final DoGetWithRequestParametersModel doGetWithRequestParametersModel = DoGetWithRequestParametersModel.builder()
                 .requestUrl(BuildConfig.AUTHORIZE_URL)
                 .readTimeout(0)
                 .connectTimeout(0)
                 .requestParameters(requestParameters)
                 .build();
-        access(doGetWithRequestParametersModel);
-    }
 
-    public static void access(final DoGetWithRequestParametersModel doGetWithRequestParametersModel) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -228,17 +238,17 @@ public class ApplicationHandler {
     public static String obtainMacAddressDefault(Context context) {
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager == null) {
-            return null;
+            return DEFAULT_MAC_ADDRESS;
         }
 
         WifiInfo info = wifiManager.getConnectionInfo();
         if (info == null) {
-            return null;
+            return DEFAULT_MAC_ADDRESS;
         }
 
         String mac = info.getMacAddress();
         if (StringUtils.isBlank(mac)) {
-            return null;
+            return DEFAULT_MAC_ADDRESS;
         }
         return mac.toUpperCase(Locale.ENGLISH);
     }
@@ -256,7 +266,7 @@ public class ApplicationHandler {
 
             byte[] bytes = networkInterface.getHardwareAddress();
             if (bytes == null) {
-                return null;
+                return DEFAULT_MAC_ADDRESS;
             }
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -269,7 +279,7 @@ public class ApplicationHandler {
             }
             return stringBuilder.toString();
         }
-        return null;
+        return DEFAULT_MAC_ADDRESS;
     }
 
     public static String obtainMacAddress(Context context) throws IOException {
@@ -284,14 +294,14 @@ public class ApplicationHandler {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return obtainMacAddressFromHardware();
         }
-        return "02:00:00:00:00:00";
+        return DEFAULT_MAC_ADDRESS;
     }
 
     public static String obtainMacAddressSafe(Context context) {
         try {
             return obtainMacAddress(context);
         } catch (Exception e) {
-            return "02:00:00:00:00:00";
+            return DEFAULT_MAC_ADDRESS;
         }
     }
 

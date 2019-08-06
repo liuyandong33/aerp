@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
      * 获取用户信息
      */
     private void obtainUserInfo() {
-        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_USER_OBTAIN_USER_INFO, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO);
+        ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_USER_OBTAIN_USER_INFO, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO);
     }
 
     /**
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         onlinePosBody.put("type", "android");
         onlinePosBody.put("version", BuildConfig.VERSION_NAME);
         onlinePosBody.put("cloudPushDeviceId", cloudPushDeviceId);
-        ApplicationHandler.access(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
+        ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -165,7 +165,8 @@ public class MainActivity extends AppCompatActivity {
             DatabaseUtils.insert(this, pos);
 
             Intent intent = new Intent(this, HomeActivity.class);
-            this.startActivity(intent);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 }

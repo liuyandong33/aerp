@@ -54,10 +54,12 @@ public class Constants {
     public static final String EVENT_TYPE_CATERING_USER_OBTAIN_USER_INFO = "catering.user.obtainUserInfo";
     public static final String EVENT_TYPE_CATERING_POS_ONLINE_POS = "catering.pos.onlinePos";
     public static final String EVENT_TYPE_CATERING_POS_OFFLINE_POS = "catering.pos.offlinePos";
+    public static final String EVENT_TYPE_CATERING_DIET_ORDER_OBTAIN_DIET_ORDER_INFO = "catering.dietOrder.obtainDietOrderInfo";
 
     public static final String METHOD_CATERING_USER_OBTAIN_USER_INFO = "catering.user.obtainUserInfo";
     public static final String METHOD_CATERING_POS_ONLINE_POS = "catering.pos.onlinePos";
     public static final String METHOD_CATERING_POS_OFFLINE_POS = "catering.pos.offlinePos";
+    public static final String METHOD_CATERING_DIET_ORDER_OBTAIN_DIET_ORDER_INFO = "catering.dietOrder.obtainDietOrderInfo";
 
     public static final String SQL_OPERATION_SYMBOL_IN = "IN";
     public static final String SQL_OPERATION_SYMBOL_NOT_IN = "NOT IN";
