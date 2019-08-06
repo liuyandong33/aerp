@@ -1,13 +1,11 @@
 package build.dream.aerp.domains;
 
-import java.math.BigInteger;
-
 public class Pos extends BasicDomain {
     public static final String TABLE_NAME = "pos";
     /**
      * 商户ID
      */
-    private BigInteger tenantId;
+    private Long tenantId;
     /**
      * 商户编号
      */
@@ -15,7 +13,7 @@ public class Pos extends BasicDomain {
     /**
      * 门店ID
      */
-    private BigInteger branchId;
+    private Long branchId;
     /**
      * 门店编号
      */
@@ -23,7 +21,7 @@ public class Pos extends BasicDomain {
     /**
      * 用户ID
      */
-    private BigInteger userId;
+    private Long userId;
     /**
      * 设备ID，mac地址
      */
@@ -56,11 +54,11 @@ public class Pos extends BasicDomain {
      */
     private String mqttToken;
 
-    public BigInteger getTenantId() {
+    public Long getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(BigInteger tenantId) {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 
@@ -72,11 +70,11 @@ public class Pos extends BasicDomain {
         this.tenantCode = tenantCode;
     }
 
-    public BigInteger getBranchId() {
+    public Long getBranchId() {
         return branchId;
     }
 
-    public void setBranchId(BigInteger branchId) {
+    public void setBranchId(Long branchId) {
         this.branchId = branchId;
     }
 
@@ -88,11 +86,11 @@ public class Pos extends BasicDomain {
         this.branchCode = branchCode;
     }
 
-    public BigInteger getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigInteger userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

@@ -10,18 +10,30 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import build.dream.aerp.api.ApiRest;
 import build.dream.aerp.constants.Constants;
+import build.dream.aerp.database.SearchModel;
+import build.dream.aerp.domains.DietOrder;
+import build.dream.aerp.domains.DietOrderActivity;
+import build.dream.aerp.domains.DietOrderDetail;
+import build.dream.aerp.domains.DietOrderDetailGoodsAttribute;
+import build.dream.aerp.domains.DietOrderGroup;
+import build.dream.aerp.domains.DietOrderPayment;
 import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.utils.ApplicationHandler;
+import build.dream.aerp.utils.DatabaseUtils;
 import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.JacksonUtils;
-import build.dream.aerp.utils.ToastUtils;
+import build.dream.aerp.utils.ObjectUtils;
 import build.dream.aerp.utils.ValidateUtils;
 
 public class OrderService extends Service {
+    private long orderId;
+    private String uuid;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -31,11 +43,20 @@ public class OrderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
-        long orderId = extras.getLong("orderId");
+        orderId = extras.getLong("orderId");
+        uuid = extras.getString("uuid");
 
-        Map<String, Object> bodyMap = new HashMap<String, Object>();
-        bodyMap.put("dietOrderId", orderId);
-        ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_DIET_ORDER_OBTAIN_DIET_ORDER_INFO, JacksonUtils.writeValueAsString(bodyMap), Constants.EVENT_TYPE_CATERING_DIET_ORDER_OBTAIN_DIET_ORDER_INFO);
+        SearchModel searchModel = SearchModel.builder()
+                .equal(DietOrder.ColumnName.ID, orderId)
+                .build();
+        DietOrder dietOrder = DatabaseUtils.find(this, DietOrder.class, searchModel);
+        if (ObjectUtils.isNull(dietOrder)) {
+            Map<String, Object> bodyMap = new HashMap<String, Object>();
+            bodyMap.put("orderId", orderId);
+            ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_DIET_ORDER_PULL_ORDER, JacksonUtils.writeValueAsString(bodyMap), Constants.EVENT_TYPE_CATERING_DIET_ORDER_PULL_ORDER);
+        } else {
+            sendOrderBroadcast();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -51,16 +72,49 @@ public class OrderService extends Service {
         EventBusUtils.unregister(this);
     }
 
+    private void sendOrderBroadcast() {
+        Intent sendBroadcastIntent = new Intent();
+        sendBroadcastIntent.putExtra("orderId", orderId);
+        sendBroadcastIntent.putExtra("uuid", uuid);
+        sendBroadcastIntent.setAction("ElemeOrder");
+        sendBroadcast(sendBroadcastIntent);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(EventBusEvent eventBusEvent) {
         String type = eventBusEvent.getType();
-        if (Constants.EVENT_TYPE_CATERING_DIET_ORDER_OBTAIN_DIET_ORDER_INFO.equals(type)) {
+        if (Constants.EVENT_TYPE_CATERING_DIET_ORDER_PULL_ORDER.equals(type)) {
             ApiRest apiRest = (ApiRest) eventBusEvent.getSource();
-            if (!ValidateUtils.validateApiRest(this, apiRest)) {
+            if (!ValidateUtils.validateApiRest(apiRest)) {
                 return;
             }
 
-            ToastUtils.showLongToast(this, JacksonUtils.writeValueAsString(apiRest));
+            Map<String, Object> data = (Map<String, Object>) apiRest.getData();
+            DietOrder dietOrder = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("dietOrder")), DietOrder.class);
+            DatabaseUtils.insert(this, dietOrder);
+
+            List<DietOrderGroup> dietOrderGroups = JacksonUtils.readValueAsList(JacksonUtils.writeValueAsString(data.get("dietOrderGroups")), DietOrderGroup.class);
+            DatabaseUtils.insertAll(this, dietOrderGroups);
+
+            List<DietOrderDetail> dietOrderDetails = JacksonUtils.readValueAsList(JacksonUtils.writeValueAsString(data.get("dietOrderDetails")), DietOrderDetail.class);
+            DatabaseUtils.insertAll(this, dietOrderDetails);
+
+            if (data.containsKey("dietOrderDetailGoodsAttributes")) {
+                List<DietOrderDetailGoodsAttribute> dietOrderDetailGoodsAttributes = JacksonUtils.readValueAsList(JacksonUtils.writeValueAsString(data.get("dietOrderDetailGoodsAttributes")), DietOrderDetailGoodsAttribute.class);
+                DatabaseUtils.insertAll(this, dietOrderDetailGoodsAttributes);
+            }
+
+            if (data.containsKey("dietOrderActivities")) {
+                List<DietOrderActivity> dietOrderActivities = JacksonUtils.readValueAsList(JacksonUtils.writeValueAsString(data.get("dietOrderActivities")), DietOrderActivity.class);
+                DatabaseUtils.insertAll(this, dietOrderActivities);
+            }
+
+            if (data.containsKey("dietOrderPayments")) {
+                List<DietOrderPayment> dietOrderPayments = JacksonUtils.readValueAsList(JacksonUtils.writeValueAsString(data.get("dietOrderPayments")), DietOrderPayment.class);
+                DatabaseUtils.insertAll(this, dietOrderPayments);
+            }
+
+            sendOrderBroadcast();
         }
     }
 }

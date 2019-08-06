@@ -1,24 +1,27 @@
 package build.dream.aerp.domains;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Date;
 
+import build.dream.aerp.utils.ObjectUtils;
+
 public class BasicDomain implements Serializable, Cloneable {
-    private BigInteger id;
+    private Long id;
     private Date createdTime;
-    private BigInteger createdUserId;
+    private Long createdUserId;
     private Date updatedTime;
-    private BigInteger updatedUserId;
+    private Long updatedUserId;
     private String updatedRemark;
     private Date deletedTime;
     private boolean deleted;
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -30,11 +33,11 @@ public class BasicDomain implements Serializable, Cloneable {
         this.createdTime = createdTime;
     }
 
-    public BigInteger getCreatedUserId() {
+    public Long getCreatedUserId() {
         return createdUserId;
     }
 
-    public void setCreatedUserId(BigInteger createdUserId) {
+    public void setCreatedUserId(Long createdUserId) {
         this.createdUserId = createdUserId;
     }
 
@@ -46,11 +49,11 @@ public class BasicDomain implements Serializable, Cloneable {
         this.updatedTime = updatedTime;
     }
 
-    public BigInteger getUpdatedUserId() {
+    public Long getUpdatedUserId() {
         return updatedUserId;
     }
 
-    public void setUpdatedUserId(BigInteger updatedUserId) {
+    public void setUpdatedUserId(Long updatedUserId) {
         this.updatedUserId = updatedUserId;
     }
 
@@ -98,5 +101,71 @@ public class BasicDomain implements Serializable, Cloneable {
         public static final String UPDATED_REMARK = "updatedRemark";
         public static final String DELETED_TIME = "deletedTime";
         public static final String DELETED = "deleted";
+    }
+
+    protected abstract static class Builder<BT extends Builder<BT, IT>, IT extends BasicDomain> {
+        private Class<IT> domainClass;
+        protected IT instance;
+
+        public Builder() {
+            Type type = this.getClass().getGenericSuperclass();
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+            domainClass = (Class<IT>) actualTypeArguments[1];
+            instance = ObjectUtils.newInstance(domainClass);
+        }
+
+        public BT id(Long id) {
+            instance.setId(id);
+            return (BT) this;
+        }
+
+        public BT createdTime(Date createdTime) {
+            instance.setCreatedTime(createdTime);
+            return (BT) this;
+        }
+
+        public BT createdUserId(Long createdUserId) {
+            instance.setCreatedUserId(createdUserId);
+            return (BT) this;
+        }
+
+        public BT updatedTime(Date updatedTime) {
+            instance.setUpdatedTime(updatedTime);
+            return (BT) this;
+        }
+
+        public BT updatedUserId(Long updatedUserId) {
+            instance.setUpdatedUserId(updatedUserId);
+            return (BT) this;
+        }
+
+        public BT updatedRemark(String updatedRemark) {
+            instance.setUpdatedRemark(updatedRemark);
+            return (BT) this;
+        }
+
+        public BT deletedTime(Date deletedTime) {
+            instance.setDeletedTime(deletedTime);
+            return (BT) this;
+        }
+
+        public BT deleted(boolean deleted) {
+            instance.setDeleted(deleted);
+            return (BT) this;
+        }
+
+        protected IT build() {
+            IT domain = ObjectUtils.newInstance(domainClass);
+            domain.setId(instance.getId());
+            domain.setCreatedTime(instance.getCreatedTime());
+            domain.setCreatedUserId(instance.getCreatedUserId());
+            domain.setUpdatedTime(instance.getUpdatedTime());
+            domain.setUpdatedUserId(instance.getUpdatedUserId());
+            domain.setUpdatedRemark(instance.getUpdatedRemark());
+            domain.setDeletedTime(instance.getDeletedTime());
+            domain.setDeleted(instance.isDeleted());
+            return domain;
+        }
     }
 }

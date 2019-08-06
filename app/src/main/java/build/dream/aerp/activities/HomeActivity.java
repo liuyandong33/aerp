@@ -33,6 +33,7 @@ import build.dream.aerp.utils.ValidateUtils;
 
 public class HomeActivity extends AppCompatActivity {
     private Button logoutButton;
+    private Button orderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +43,20 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         logoutButton = findViewById(R.id.activity_home_button_logout_button);
+        orderButton = findViewById(R.id.activity_home_button_order_button);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(HomeActivity.this), Constants.METHOD_CATERING_POS_OFFLINE_POS, Constants.EMPTY_JSON_OBJECT, Constants.EVENT_TYPE_CATERING_POS_OFFLINE_POS);
+            }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ElemeOrderActivity.class);
+                HomeActivity.this.startActivity(intent);
             }
         });
 

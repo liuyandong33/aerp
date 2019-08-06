@@ -1,7 +1,5 @@
 package build.dream.aerp.domains;
 
-import java.math.BigInteger;
-
 public class SystemUser extends BasicDomain {
     public static final String TABLE_NAME = "system_user";
     /**
@@ -39,11 +37,11 @@ public class SystemUser extends BasicDomain {
     /**
      * 商户ID
      */
-    private BigInteger tenantId;
+    private Long tenantId;
     /**
      * 代理商ID
      */
-    private BigInteger agentId;
+    private Long agentId;
     /**
      * 账户是否没有过期，1-没有过期，0-已经过期
      */
@@ -125,19 +123,19 @@ public class SystemUser extends BasicDomain {
         this.weiXinOpenPlatformOpenId = weiXinOpenPlatformOpenId;
     }
 
-    public BigInteger getTenantId() {
+    public Long getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(BigInteger tenantId) {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 
-    public BigInteger getAgentId() {
+    public Long getAgentId() {
         return agentId;
     }
 
-    public void setAgentId(BigInteger agentId) {
+    public void setAgentId(Long agentId) {
         this.agentId = agentId;
     }
 

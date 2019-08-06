@@ -20,4 +20,12 @@ public class ValidateUtils {
 
         return true;
     }
+
+    public static boolean validateApiRest(ApiRest apiRest) {
+        if (!apiRest.isSuccessful()) {
+            return false;
+        }
+
+        return apiRest.verifySign(BuildConfig.PLATFORM_PUBLIC_KEY, Constants.DEFAULT_DATE_PATTERN);
+    }
 }

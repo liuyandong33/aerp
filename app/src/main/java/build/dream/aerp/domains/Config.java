@@ -1,18 +1,16 @@
 package build.dream.aerp.domains;
 
-import java.math.BigInteger;
-
 public class Config {
     public static final String TABLE_NAME = "config";
-    private BigInteger id;
+    private Long id;
     private String name;
     private String value;
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -35,7 +33,7 @@ public class Config {
     public static class Builder {
         private final Config instance = new Config();
 
-        public Builder id(BigInteger id) {
+        public Builder id(Long id) {
             instance.setId(id);
             return this;
         }

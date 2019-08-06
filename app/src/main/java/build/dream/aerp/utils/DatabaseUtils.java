@@ -126,6 +126,18 @@ public class DatabaseUtils {
         return influenceRowNumber;
     }
 
+    public static void insertAll(Context context, List<?> domains) {
+        insertAll(getWritableDatabase(context), domains);
+    }
+
+    public static void insertAll(SQLiteDatabase sqLiteDatabase, List<?> domains) {
+        String tableName = obtainTableName(domains.get(0));
+        for (Object domain : domains) {
+            sqLiteDatabase.insert(tableName, null, buildContentValues(domain));
+        }
+        closeSQLiteDatabase(sqLiteDatabase);
+    }
+
     public static int update(Context context, Object domain) {
         return update(getWritableDatabase(context), domain);
     }

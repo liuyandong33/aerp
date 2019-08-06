@@ -28,7 +28,7 @@ public class CloudPushMessageReceiver extends MessageReceiver {
         int type = MapUtils.getIntValue(contentMap, "type");
         switch (type) {
             case 1:
-                OrderUtils.saveOrder(context, MapUtils.getLongValue(contentMap, "orderId"));
+                OrderUtils.saveOrder(context, MapUtils.getLongValue(contentMap, "orderId"), MapUtils.getString(contentMap, "uuid"));
                 break;
         }
         ToastUtils.showLongToast(context, content);

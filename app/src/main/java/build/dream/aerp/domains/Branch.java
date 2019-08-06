@@ -1,13 +1,11 @@
 package build.dream.aerp.domains;
 
-import java.math.BigInteger;
-
 public class Branch extends BasicDomain {
     public static final String TABLE_NAME = "branch";
     /**
      * 商户id
      */
-    private BigInteger tenantId;
+    private Long tenantId;
     /**
      * 商户编码
      */
@@ -79,7 +77,7 @@ public class Branch extends BasicDomain {
     /**
      * 饿了么门店id
      */
-    private BigInteger shopId;
+    private Long shopId;
     /**
      * 微餐厅状态，1-正常，2-禁用
      */
@@ -99,7 +97,7 @@ public class Branch extends BasicDomain {
     /**
      * 会员分组ID
      */
-    private BigInteger vipGroupId;
+    private Long vipGroupId;
     /**
      * 营业时间
      */
@@ -109,11 +107,11 @@ public class Branch extends BasicDomain {
      */
     private String dadaOriginShopId;
 
-    public BigInteger getTenantId() {
+    public Long getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(BigInteger tenantId) {
+    public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
 
@@ -253,11 +251,11 @@ public class Branch extends BasicDomain {
         this.elemeAccountType = elemeAccountType;
     }
 
-    public BigInteger getShopId() {
+    public Long getShopId() {
         return shopId;
     }
 
-    public void setShopId(BigInteger shopId) {
+    public void setShopId(Long shopId) {
         this.shopId = shopId;
     }
 
@@ -293,11 +291,11 @@ public class Branch extends BasicDomain {
         this.poiName = poiName;
     }
 
-    public BigInteger getVipGroupId() {
+    public Long getVipGroupId() {
         return vipGroupId;
     }
 
-    public void setVipGroupId(BigInteger vipGroupId) {
+    public void setVipGroupId(Long vipGroupId) {
         this.vipGroupId = vipGroupId;
     }
 
