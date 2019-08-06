@@ -90,4 +90,6 @@ public class Constants {
 
     public static final String CONFIG_NAME_PUBLIC_KEY = "PUBLIC_KEY";
     public static final String CONFIG_NAME_PRIVATE_KEY = "PRIVATE_KEY";
+
+    public static final String INTENT_ACTION_ELEME_ORDER = "ELEME_ORDER";
 }

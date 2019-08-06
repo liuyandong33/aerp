@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         OAuthToken oAuthToken = ApplicationHandler.obtainOAuthToken(this);
         if (ObjectUtils.isNotNull(oAuthToken) && oAuthToken.isEffective()) {
             Intent intent = new Intent(this, HomeActivity.class);
-            this.startActivity(intent);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         } else {
             DatabaseUtils.delete(this, OAuthToken.TABLE_NAME);
             DatabaseUtils.delete(this, Tenant.TABLE_NAME);
