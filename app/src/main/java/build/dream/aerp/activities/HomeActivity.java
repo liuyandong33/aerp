@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         StatusBarUtils.setStatusBarColor(this, R.color.color41d09b);
         setContentView(R.layout.activity_home);
 
-        /*logoutButton = findViewById(R.id.activity_home_button_logout_button);
+        logoutButton = findViewById(R.id.activity_home_button_logout_button);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Branch branch = DatabaseUtils.find(this, Branch.class);
         TextView branchNameTextView = findViewById(R.id.activity_home_text_view_branch_name);
-        branchNameTextView.setText(branch.getName());*/
+        branchNameTextView.setText(branch.getName());
 
         LocationManager locationManager = ApplicationHandler.obtainLocationManager(this);
         String locationProvider = ApplicationHandler.obtainLocationProvider(locationManager);

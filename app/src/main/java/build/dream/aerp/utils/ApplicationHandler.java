@@ -38,6 +38,7 @@ import build.dream.aerp.beans.OAuthTokenError;
 import build.dream.aerp.beans.WebResponse;
 import build.dream.aerp.constants.Constants;
 import build.dream.aerp.constants.HttpHeaders;
+import build.dream.aerp.domains.Config;
 import build.dream.aerp.domains.OAuthToken;
 import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.models.web.DoGetWithRequestParametersModel;
@@ -59,6 +60,36 @@ public class ApplicationHandler {
     static {
         APPLICATION_JSON_UTF8_HTTP_HEADERS = new HashMap<String, String>();
         APPLICATION_JSON_UTF8_HTTP_HEADERS.put(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON_UTF8);
+    }
+
+    public static String obtainPublicKeyString() {
+        if (StringUtils.isBlank(publicKeyString)) {
+            Config config = ConfigUtils.obtainConfig(Constants.CONFIG_NAME_PUBLIC_KEY);
+            publicKeyString = config.getValue();
+        }
+        return publicKeyString;
+    }
+
+    public static String obtainPrivateKeyString() {
+        if (StringUtils.isBlank(privateKeyString)) {
+            Config config = ConfigUtils.obtainConfig(Constants.CONFIG_NAME_PRIVATE_KEY);
+            privateKeyString = config.getValue();
+        }
+        return privateKeyString;
+    }
+
+    public static PublicKey obtainPublicKey() {
+        if (ObjectUtils.isNull(publicKey)) {
+            publicKey = RSAUtils.restorePublicKey(publicKeyString);
+        }
+        return publicKey;
+    }
+
+    public static PrivateKey obtainPrivateKey() {
+        if (ObjectUtils.isNull(privateKey)) {
+            privateKey = RSAUtils.restorePrivateKey(privateKeyString);
+        }
+        return privateKey;
     }
 
     public static OAuthToken obtainOAuthToken(Context context) {
@@ -83,7 +114,7 @@ public class ApplicationHandler {
         sortedMap.put("id", id);
 
         byte[] data = (WebUtils.concat(sortedMap) + body).getBytes(Constants.CHARSET_UTF_8);
-        byte[] sign = SignatureUtils.sign(data, privateKey, SignatureUtils.SIGNATURE_TYPE_SHA256_WITH_RSA);
+        byte[] sign = SignatureUtils.sign(data, obtainPrivateKey(), SignatureUtils.SIGNATURE_TYPE_SHA256_WITH_RSA);
 
         String signature = Base64.encodeToString(sign, Base64.DEFAULT);
         Map<String, String> queryStringMap = new HashMap<String, String>();
@@ -168,8 +199,17 @@ public class ApplicationHandler {
                     publicKeyString = headers.get("Public-Key").get(0);
                     privateKeyString = headers.get("Private-Key").get(0);
 
-                    publicKey = RSAUtils.restorePublicKey(publicKeyString);
-                    privateKey = RSAUtils.restorePrivateKey(privateKeyString);
+                    Config publicKeyConfig = Config.builder()
+                            .name(Constants.CONFIG_NAME_PUBLIC_KEY)
+                            .value(publicKeyString)
+                            .build();
+                    DatabaseUtils.insert(application, publicKeyConfig);
+
+                    Config privateKeyConfig = Config.builder()
+                            .name(Constants.CONFIG_NAME_PRIVATE_KEY)
+                            .value(privateKeyString)
+                            .build();
+                    DatabaseUtils.insert(application, privateKeyConfig);
 
                     OAuthToken oAuthToken = new OAuthToken();
                     oAuthToken.setAccessToken(MapUtils.getString(resultMap, "access_token"));

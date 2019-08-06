@@ -1,77 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/id_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#efeff4"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activities.HomeActivity">
 
-    <fragment
-        android:id="@+id/id_fragment_title"
-        android:name="build.dream.aerp.fragments.TitleFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="45dp"
-        tools:layout="@layout/fragment_title"></fragment>
+    <TextView
+        android:id="@+id/activity_home_text_view_branch_name"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#00AAEE"
+        android:gravity="center"
+        android:text="门店名称"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"></TextView>
 
-
-    <fragment
-        android:id="@+id/id_fragment_main"
-        android:name="build.dream.aerp.fragments.MainFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/id_fragment_title"
-        tools:layout="@layout/fragment_main"></fragment>
-
-    <LinearLayout
-        android:id="@+id/bottomLL"
+    <Button
+        android:id="@+id/activity_home_button_logout_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_weight="0.1"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <RadioGroup
-            android:id="@+id/rg_tab"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="#ffffff"
-            android:gravity="bottom"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/tab1"
-                style="@style/weibo_tab"
-                android:checked="false"
-                android:drawableTop="@drawable/global_button_selector"
-                android:text="首页"></RadioButton>
-
-            <RadioButton
-                android:id="@+id/tab2"
-                style="@style/weibo_tab"
-                android:checked="false"
-                android:drawableTop="@drawable/store_button_selector"
-                android:text="库存"></RadioButton>
-
-            <RadioButton
-                android:id="@+id/tab3"
-                style="@style/weibo_tab"
-                android:drawableTop="@drawable/sale_button_selector"
-                android:text="销售"></RadioButton>
-
-            <RadioButton
-                android:id="@+id/tab4"
-                style="@style/weibo_tab"
-                android:drawableTop="@drawable/report_button_selector"
-                android:text="报表"></RadioButton>
-
-            <RadioButton
-                android:id="@+id/tab5"
-                style="@style/weibo_tab"
-                android:drawableTop="@drawable/basics_button_selector"
-                android:text="基础"></RadioButton>
-        </RadioGroup>
-    </LinearLayout>
-</RelativeLayout>
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:background="#00AAEE"
+        android:text="退出"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"></Button>
+</LinearLayout>

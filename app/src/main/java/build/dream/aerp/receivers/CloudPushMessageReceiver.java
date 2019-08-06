@@ -11,6 +11,7 @@ import org.apache.commons.collections4.MapUtils;
 import java.util.Map;
 
 import build.dream.aerp.utils.JacksonUtils;
+import build.dream.aerp.utils.ToastUtils;
 
 public class CloudPushMessageReceiver extends MessageReceiver {
     @Override
@@ -27,6 +28,7 @@ public class CloudPushMessageReceiver extends MessageReceiver {
             case 1:
                 break;
         }
+        ToastUtils.showLongToast(context, content);
     }
 
     @Override

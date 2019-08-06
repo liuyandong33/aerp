@@ -77,4 +77,26 @@ public class BasicDomain implements Serializable, Cloneable {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+
+    protected static class ColumnName {
+        public static final String ID = "id";
+        public static final String CREATED_TIME = "created_time";
+        public static final String CREATED_USER_ID = "created_user_id";
+        public static final String UPDATED_TIME = "updated_time";
+        public static final String UPDATED_USER_ID = "updated_user_id";
+        public static final String UPDATED_REMARK = "updated_remark";
+        public static final String DELETED_TIME = "deleted_time";
+        public static final String DELETED = "deleted";
+    }
+
+    protected static class FieldName {
+        public static final String ID = "id";
+        public static final String CREATED_TIME = "createdTime";
+        public static final String CREATED_USER_ID = "createdUserId";
+        public static final String UPDATED_TIME = "updatedTime";
+        public static final String UPDATED_USER_ID = "updatedUserId";
+        public static final String UPDATED_REMARK = "updatedRemark";
+        public static final String DELETED_TIME = "deletedTime";
+        public static final String DELETED = "deleted";
+    }
 }

@@ -31,4 +31,47 @@ public class Config {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public static class Builder {
+        private final Config instance = new Config();
+
+        public Builder id(BigInteger id) {
+            instance.setId(id);
+            return this;
+        }
+
+        public Builder name(String name) {
+            instance.setName(name);
+            return this;
+        }
+
+        public Builder value(String value) {
+            instance.setValue(value);
+            return this;
+        }
+
+        public Config build() {
+            Config config = new Config();
+            config.setId(instance.getId());
+            config.setName(instance.getName());
+            config.setValue(instance.getValue());
+            return config;
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class ColumnName {
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String VALUE = "value";
+    }
+
+    public static class FieldName {
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String VALUE = "value";
+    }
 }
