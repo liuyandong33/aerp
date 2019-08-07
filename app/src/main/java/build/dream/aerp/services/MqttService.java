@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -17,8 +18,13 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.Map;
+
 import build.dream.aerp.constants.Constants;
+import build.dream.aerp.utils.JacksonUtils;
+import build.dream.aerp.utils.OrderUtils;
 import build.dream.aerp.utils.ThreadUtils;
+import build.dream.aerp.utils.ToastUtils;
 
 public class MqttService extends Service {
     private String endPoint;
@@ -56,10 +62,15 @@ public class MqttService extends Service {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Intent intent = new Intent();
-                intent.putExtra("payload", new String(message.getPayload(), Constants.CHARSET_UTF_8));
-                intent.setAction(Constants.INTENT_ACTION_ELEME_ORDER);
-                MqttService.this.sendBroadcast(intent);
+                String payload = new String(message.getPayload(), Constants.CHARSET_UTF_8);
+                Map<String, Object> payloadMap = JacksonUtils.readValueAsMap(payload, String.class, Object.class);
+                int type = MapUtils.getIntValue(payloadMap, "type");
+                switch (type) {
+                    case 1:
+                        OrderUtils.handleElemeOrder(MqttService.this, payloadMap);
+                        break;
+                }
+                ToastUtils.showLongToast(MqttService.this, payload);
             }
 
             @Override
