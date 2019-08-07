@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText loginNameEditText;
     private EditText passwordEditText;
     private Button loginButton;
+    private Button openAMapButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +64,25 @@ public class MainActivity extends AppCompatActivity {
             loginNameEditText = findViewById(R.id.activity_main_edit_text_login_name);
             passwordEditText = findViewById(R.id.activity_main_edit_text_password);
             loginButton = findViewById(R.id.activity_main_button_login_button);
-            loginButton.setOnClickListener(buildOnClickListener());
+            loginButton.setOnClickListener(buildLoginButtonOnClickListener());
+
+            openAMapButton = findViewById(R.id.activity_main_button_open_amap_button);
+            openAMapButton.setOnClickListener(buildOpenAMapButtonOnClickListener());
         }
     }
 
-    private View.OnClickListener buildOnClickListener() {
+    private View.OnClickListener buildOpenAMapButtonOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AMapActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener buildLoginButtonOnClickListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -2,11 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="build.dream.aerp">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- 允许程序设置内置sd卡的写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".MainApplication"
@@ -18,37 +24,41 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity android:name=".activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"></category>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <meta-data
             android:name="com.alibaba.app.appkey"
-            android:value="27710843"></meta-data>
+            android:value="27710843" />
         <meta-data
             android:name="com.alibaba.app.appsecret"
-            android:value="0ac4c05333a4bfa494be3a1dc454e733"></meta-data>
+            android:value="0ac4c05333a4bfa494be3a1dc454e733" />
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="3de5e2a13030087b7df47db4dc93f20f" />
 
         <receiver
             android:name=".receivers.CloudPushMessageReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"></action>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"></action>
+                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.alibaba.sdk.android.push.RECEIVE"></action>
+                <action android:name="com.alibaba.sdk.android.push.RECEIVE" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.HomeActivity"></activity>
+        <activity android:name=".activities.HomeActivity" />
         <activity
             android:name=".activities.ElemeOrderActivity"
-            android:launchMode="singleInstance"></activity>
+            android:launchMode="singleInstance" />
+        <activity android:name=".activities.AMapActivity"></activity>
     </application>
 
 </manifest>
