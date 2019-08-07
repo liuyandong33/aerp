@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -27,6 +28,7 @@ import build.dream.aerp.domains.Pos;
 import build.dream.aerp.domains.SystemUser;
 import build.dream.aerp.domains.Tenant;
 import build.dream.aerp.eventbus.EventBusEvent;
+import build.dream.aerp.services.MqttService;
 import build.dream.aerp.utils.ApplicationHandler;
 import build.dream.aerp.utils.CloudPushUtils;
 import build.dream.aerp.utils.DatabaseUtils;
@@ -179,6 +181,17 @@ public class MainActivity extends AppCompatActivity {
             Map<String, Object> data = (Map<String, Object>) apiRest.getData();
             Pos pos = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("pos")), Pos.class);
             DatabaseUtils.insert(this, pos);
+
+            Map<String, Object> mqttInfo = (Map<String, Object>) data.get("mqttInfo");
+            if (MapUtils.isNotEmpty(mqttInfo)) {
+                Intent startMqttServiceIntent = new Intent(this, MqttService.class);
+                startMqttServiceIntent.putExtra("endPoint", MapUtils.getString(mqttInfo, "endPoint"));
+                startMqttServiceIntent.putExtra("clientId", MapUtils.getString(mqttInfo, "clientId"));
+                startMqttServiceIntent.putExtra("userName", MapUtils.getString(mqttInfo, "userName"));
+                startMqttServiceIntent.putExtra("password", MapUtils.getString(mqttInfo, "password"));
+                startMqttServiceIntent.putExtra("topic", MapUtils.getString(mqttInfo, "topic"));
+                startService(startMqttServiceIntent);
+            }
 
             Intent intent = new Intent(this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

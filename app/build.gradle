@@ -86,4 +86,7 @@ dependencies {
     implementation "com.aliyun.ams:alicloud-android-ut:5.4.0"
     implementation "org.greenrobot:eventbus:3.1.1"
     implementation "com.amap.api:3dmap:latest.integration"
+
+    implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0"
+    implementation "org.eclipse.paho:org.eclipse.paho.android.service:1.1.1"
 }
