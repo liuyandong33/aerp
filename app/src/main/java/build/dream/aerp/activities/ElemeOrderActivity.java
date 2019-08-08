@@ -35,11 +35,13 @@ import build.dream.aerp.utils.EventBusUtils;
 import build.dream.aerp.utils.JacksonUtils;
 import build.dream.aerp.utils.ObjectUtils;
 import build.dream.aerp.utils.OrderUtils;
+import build.dream.aerp.utils.ToastUtils;
 import build.dream.aerp.utils.ValidateUtils;
 
 public class ElemeOrderActivity extends AppCompatActivity {
     private Button confirmOrderButton;
     private Button waitButton;
+    private Button clearDataButton;
     private OrderBroadcastReceiver orderBroadcastReceiver;
     Map<Long, Ringtone> ringtoneMap = new HashMap<Long, Ringtone>();
     private long orderId;
@@ -53,6 +55,7 @@ public class ElemeOrderActivity extends AppCompatActivity {
 
         confirmOrderButton = findViewById(R.id.activity_eleme_order_button_confirm_order_button);
         waitButton = findViewById(R.id.activity_eleme_order_button_wait_button);
+        clearDataButton = findViewById(R.id.activity_eleme_order_button_clear_data_button);
         confirmOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,8 +64,8 @@ public class ElemeOrderActivity extends AppCompatActivity {
                     ringtone.stop();
                 }
                 confirmOrderLite();
-                confirmOrderButton.setVisibility(View.INVISIBLE);
-                waitButton.setVisibility(View.INVISIBLE);
+                confirmOrderButton.setVisibility(View.GONE);
+                waitButton.setVisibility(View.GONE);
             }
         });
 
@@ -73,8 +76,21 @@ public class ElemeOrderActivity extends AppCompatActivity {
                 if (ObjectUtils.isNotNull(ringtone) && ringtone.isPlaying()) {
                     ringtone.stop();
                 }
-                confirmOrderButton.setVisibility(View.INVISIBLE);
-                waitButton.setVisibility(View.INVISIBLE);
+                confirmOrderButton.setVisibility(View.GONE);
+                waitButton.setVisibility(View.GONE);
+            }
+        });
+
+        clearDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseUtils.delete(ElemeOrderActivity.this, DietOrder.TABLE_NAME);
+                DatabaseUtils.delete(ElemeOrderActivity.this, DietOrderGroup.TABLE_NAME);
+                DatabaseUtils.delete(ElemeOrderActivity.this, DietOrderDetail.TABLE_NAME);
+                DatabaseUtils.delete(ElemeOrderActivity.this, DietOrderDetailGoodsAttribute.TABLE_NAME);
+                DatabaseUtils.delete(ElemeOrderActivity.this, DietOrderActivity.TABLE_NAME);
+                DatabaseUtils.delete(ElemeOrderActivity.this, DietOrderPayment.TABLE_NAME);
+                ToastUtils.showLongToast(ElemeOrderActivity.this, "清除数据成功！");
             }
         });
 

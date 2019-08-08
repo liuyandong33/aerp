@@ -19,10 +19,10 @@ import java.util.UUID;
 import build.dream.aerp.BuildConfig;
 import build.dream.aerp.R;
 import build.dream.aerp.api.ApiRest;
-import build.dream.aerp.beans.MqttInfo;
 import build.dream.aerp.beans.OAuthTokenError;
 import build.dream.aerp.constants.Constants;
 import build.dream.aerp.domains.Branch;
+import build.dream.aerp.domains.MqttInfo;
 import build.dream.aerp.domains.OAuthToken;
 import build.dream.aerp.domains.Pos;
 import build.dream.aerp.domains.SystemUser;
@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         OAuthToken oAuthToken = ApplicationHandler.obtainOAuthToken(this);
         if (ObjectUtils.isNotNull(oAuthToken) && oAuthToken.isEffective()) {
+            MqttInfo mqttInfo = DatabaseUtils.find(this, MqttInfo.class);
+            MqttUtils.mqttConnect(mqttInfo);
+
             Intent intent = new Intent(this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -184,6 +187,12 @@ public class MainActivity extends AppCompatActivity {
 
             if (data.containsKey("mqttInfo")) {
                 MqttInfo mqttInfo = JacksonUtils.readValue(JacksonUtils.writeValueAsString(data.get("mqttInfo")), MqttInfo.class);
+                Date now = new Date();
+                mqttInfo.setCreatedTime(now);
+                mqttInfo.setCreatedUserId(0L);
+                mqttInfo.setUpdatedTime(now);
+                mqttInfo.setUpdatedUserId(0L);
+                DatabaseUtils.insert(this, mqttInfo);
                 MqttUtils.mqttConnect(mqttInfo);
             }
 

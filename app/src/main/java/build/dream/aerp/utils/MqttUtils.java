@@ -15,7 +15,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.Map;
 
-import build.dream.aerp.beans.MqttInfo;
+import build.dream.aerp.domains.MqttInfo;
 import build.dream.aerp.constants.Constants;
 
 public class MqttUtils {

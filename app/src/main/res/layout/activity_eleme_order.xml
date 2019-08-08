@@ -19,26 +19,38 @@
     <Button
         android:id="@+id/activity_eleme_order_button_confirm_order_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="40dp"
-        android:background="#00AAEE"
+        android:background="@drawable/default_button_shape"
         android:text="接单"
         android:textColor="#FFFFFF"
-        android:textSize="18dp"
-        android:visibility="invisible"></Button>
+        android:textSize="16dp"
+        android:visibility="gone"></Button>
 
     <Button
         android:id="@+id/activity_eleme_order_button_wait_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="40dp"
-        android:background="#00AAEE"
+        android:background="@drawable/default_button_shape"
         android:text="稍后处理"
         android:textColor="#FFFFFF"
-        android:textSize="18dp"
-        android:visibility="invisible"></Button>
+        android:textSize="16dp"
+        android:visibility="gone"></Button>
+
+    <Button
+        android:id="@+id/activity_eleme_order_button_clear_data_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/default_button_shape"
+        android:text="清除数据"
+        android:textColor="#FFFFFF"
+        android:textSize="16dp"></Button>
 </LinearLayout>

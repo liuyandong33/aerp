@@ -1,6 +1,7 @@
-package build.dream.aerp.beans;
+package build.dream.aerp.domains;
 
-public class MqttInfo {
+public class MqttInfo extends BasicDomain {
+    private static final String TABLE_NAME = "mqtt_info";
     /**
      * 连接点
      */

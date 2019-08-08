@@ -87,6 +87,7 @@ public class Constants {
     public static final long DECIMAL_DEFAULT_VALUE = 0;
     public static final Date DATETIME_DEFAULT_VALUE = CustomDateUtils.parse("1970-01-01 00:00:00", DEFAULT_DATE_PATTERN);
     public static final String VARCHAR_DEFAULT_VALUE = "";
+    public static final String TEXT_DEFAULT_VALUE = "";
 
     public static final String CONFIG_NAME_PUBLIC_KEY = "PUBLIC_KEY";
     public static final String CONFIG_NAME_PRIVATE_KEY = "PRIVATE_KEY";

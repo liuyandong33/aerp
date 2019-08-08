@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Date;
 
+import build.dream.aerp.constants.Constants;
 import build.dream.aerp.utils.ObjectUtils;
 
 public class BasicDomain implements Serializable, Cloneable {
@@ -13,8 +14,8 @@ public class BasicDomain implements Serializable, Cloneable {
     private Long createdUserId;
     private Date updatedTime;
     private Long updatedUserId;
-    private String updatedRemark;
-    private Date deletedTime;
+    private String updatedRemark = Constants.TEXT_DEFAULT_VALUE;
+    private Date deletedTime = Constants.DATETIME_DEFAULT_VALUE;
     private boolean deleted;
 
     public Long getId() {
