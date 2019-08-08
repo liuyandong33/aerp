@@ -54,7 +54,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.MqttService"></service>
+        <service android:name="org.eclipse.paho.android.service.MqttService"></service>
 
         <activity android:name=".activities.HomeActivity"></activity>
         <activity

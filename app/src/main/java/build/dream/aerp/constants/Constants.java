@@ -92,4 +92,8 @@ public class Constants {
     public static final String CONFIG_NAME_PRIVATE_KEY = "PRIVATE_KEY";
 
     public static final String INTENT_ACTION_ELEME_ORDER = "ELEME_ORDER";
+
+    public static final String POS_TYPE_ANDROID = "android";
+    public static final String POS_TYPE_IOS = "ios";
+    public static final String POS_TYPE_WINDOWS = "windows";
 }

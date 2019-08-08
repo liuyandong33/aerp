@@ -1,10 +1,5 @@
-package build.dream.aerp.services;
+package build.dream.aerp.utils;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.commons.collections4.MapUtils;
@@ -20,39 +15,18 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.Map;
 
+import build.dream.aerp.beans.MqttInfo;
 import build.dream.aerp.constants.Constants;
-import build.dream.aerp.utils.JacksonUtils;
-import build.dream.aerp.utils.OrderUtils;
-import build.dream.aerp.utils.ThreadUtils;
-import build.dream.aerp.utils.ToastUtils;
 
-public class MqttService extends Service {
-    private String endPoint;
-    private String clientId;
-    private String userName;
-    private String password;
-    private String topic;
-    private MqttAndroidClient mqttAndroidClient;
+public class MqttUtils {
+    private static MqttAndroidClient mqttAndroidClient;
+    private static String endPoint;
+    private static String clientId;
+    private static String userName;
+    private static String password;
+    private static String topic;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Bundle extras = intent.getExtras();
-        endPoint = extras.getString("endPoint");
-        clientId = extras.getString("clientId");
-        userName = extras.getString("userName");
-        password = extras.getString("password");
-        topic = extras.getString("topic");
-        mqttConnect();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    private MqttCallback buildMqttCallback() {
+    private static MqttCallback buildMqttCallback() {
         return new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
@@ -67,10 +41,10 @@ public class MqttService extends Service {
                 int type = MapUtils.getIntValue(payloadMap, "type");
                 switch (type) {
                     case 1:
-                        OrderUtils.handleElemeOrder(MqttService.this, payloadMap);
+                        OrderUtils.handleElemeOrder(ApplicationHandler.application, payloadMap);
                         break;
                 }
-                ToastUtils.showLongToast(MqttService.this, payload);
+                ToastUtils.showLongToast(ApplicationHandler.application, payload);
             }
 
             @Override
@@ -80,7 +54,7 @@ public class MqttService extends Service {
         };
     }
 
-    private IMqttActionListener buildIMqttActionListener() {
+    private static IMqttActionListener buildIMqttActionListener() {
         return new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
@@ -98,9 +72,24 @@ public class MqttService extends Service {
         };
     }
 
-    public void mqttConnect() {
+    public static void mqttConnect(MqttInfo mqttInfo) {
+        endPoint = mqttInfo.getEndPoint();
+        clientId = mqttInfo.getClientId();
+        userName = mqttInfo.getUserName();
+        password = mqttInfo.getPassword();
+        topic = mqttInfo.getTopic();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mqttConnect();
+            }
+        }).start();
+    }
+
+    public static void mqttConnect() {
         try {
-            mqttAndroidClient = new MqttAndroidClient(getApplicationContext(), endPoint, clientId);
+            mqttAndroidClient = new MqttAndroidClient(ApplicationHandler.application.getApplicationContext(), "tcp://" + endPoint + ":1883", clientId);
             mqttAndroidClient.setCallback(buildMqttCallback());
 
             MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
@@ -119,7 +108,7 @@ public class MqttService extends Service {
         }
     }
 
-    public void subscribe() {
+    public static void subscribe() {
         try {
             mqttAndroidClient.subscribe(topic, 1);
         } catch (MqttException ex) {
