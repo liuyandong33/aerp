@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         OAuthToken oAuthToken = ApplicationHandler.obtainOAuthToken(this);
         if (ObjectUtils.isNotNull(oAuthToken) && oAuthToken.isEffective()) {
-            MqttInfo mqttInfo = DatabaseUtils.find(this, MqttInfo.class);
-            MqttUtils.mqttConnect(mqttInfo);
+//            MqttInfo mqttInfo = DatabaseUtils.find(this, MqttInfo.class);
+//            MqttUtils.mqttConnect(mqttInfo);
 
             Intent intent = new Intent(this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         Map<String, String> onlinePosBody = new HashMap<String, String>();
         onlinePosBody.put("deviceId", macAddress);
-        onlinePosBody.put("type", Constants.POS_TYPE_WINDOWS);
+        onlinePosBody.put("type", Constants.POS_TYPE_ANDROID);
         onlinePosBody.put("version", BuildConfig.VERSION_NAME);
         onlinePosBody.put("cloudPushDeviceId", cloudPushDeviceId);
         ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(this), Constants.METHOD_CATERING_POS_ONLINE_POS, JacksonUtils.writeValueAsString(onlinePosBody), Constants.EVENT_TYPE_CATERING_POS_ONLINE_POS);

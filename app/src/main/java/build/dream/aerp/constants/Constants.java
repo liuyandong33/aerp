@@ -55,6 +55,7 @@ public class Constants {
     public static final String EVENT_TYPE_CATERING_DIET_ORDER_OBTAIN_DIET_ORDER_INFO = "catering.dietOrder.obtainDietOrderInfo";
     public static final String EVENT_TYPE_CATERING_DIET_ORDER_PULL_ORDER = "catering.dietOrder.pullOrder";
     public static final String EVENT_TYPE_CATERING_ELEME_CONFIRM_ORDER_LITE = "catering.eleme.confirmOrderLite";
+    public static final String EVENT_TYPE_CATERING_DIET_ORDER_DO_PAY_COMBINED = "catering.dietOrder.doPayCombined";
 
     public static final String METHOD_CATERING_USER_OBTAIN_USER_INFO = "catering.user.obtainUserInfo";
     public static final String METHOD_CATERING_POS_ONLINE_POS = "catering.pos.onlinePos";
@@ -62,6 +63,7 @@ public class Constants {
     public static final String METHOD_CATERING_DIET_ORDER_OBTAIN_DIET_ORDER_INFO = "catering.dietOrder.obtainDietOrderInfo";
     public static final String METHOD_CATERING_DIET_ORDER_PULL_ORDER = "catering.dietOrder.pullOrder";
     public static final String METHOD_CATERING_ELEME_CONFIRM_ORDER_LITE = "catering.eleme.confirmOrderLite";
+    public static final String METHOD_TYPE_CATERING_DIET_ORDER_DO_PAY_COMBINED = "catering.dietOrder.doPayCombined";
 
     public static final String SQL_OPERATION_SYMBOL_IN = "IN";
     public static final String SQL_OPERATION_SYMBOL_NOT_IN = "NOT IN";
@@ -97,4 +99,40 @@ public class Constants {
     public static final String POS_TYPE_ANDROID = "android";
     public static final String POS_TYPE_IOS = "ios";
     public static final String POS_TYPE_WINDOWS = "windows";
+
+    // 支付方式编码，会员积分
+    public static final String PAYMENT_CODE_HYJF = "HYJF";
+    // 支付方式编码，会员钱包
+    public static final String PAYMENT_CODE_HYQB = "HYQB";
+    // 支付方式编码，微信支付
+    public static final String PAYMENT_CODE_WX = "WX";
+    // 支付方式编码，支付宝支付
+    public static final String PAYMENT_CODE_ALIPAY = "ALIPAY";
+    // 支付方式编码，现金
+    public static final String PAYMENT_CODE_CASH = "CASH";
+
+    /**
+     * 支付场景常量
+     *
+     * @see #PAID_SCENE_WEI_XIN_MICROPAY: 微信付款码支付
+     * @see #PAID_SCENE_WEI_XIN_JSAPI_PUBLIC_ACCOUNT: 微信JSAPI支付
+     * @see #PAID_SCENE_WEI_XIN_NATIVE: 微信Native支付
+     * @see #PAID_SCENE_WEI_XIN_APP: 微信APP支付
+     * @see #PAID_SCENE_WEI_XIN_MWEB: 微信H5支付
+     * @see #PAID_SCENE_WEI_XIN_JSAPI_MINI_PROGRAM: 微信小程序支付
+     * @see #PAID_SCENE_ALIPAY_MOBILE_WEBSITE: 支付宝手机网站支付
+     * @see #PAID_SCENE_ALIPAY_PC_WEBSITE: 支付宝电脑网站支付支付
+     * @see #PAID_SCENE_ALIPAY_APP: 支付宝APP支付
+     * @see #PAID_SCENE_ALIPAY_FAC_TO_FACE: 支付宝当面付
+     */
+    public static final Integer PAID_SCENE_WEI_XIN_MICROPAY = 1;
+    public static final Integer PAID_SCENE_WEI_XIN_JSAPI_PUBLIC_ACCOUNT = 2;
+    public static final Integer PAID_SCENE_WEI_XIN_NATIVE = 3;
+    public static final Integer PAID_SCENE_WEI_XIN_APP = 4;
+    public static final Integer PAID_SCENE_WEI_XIN_MWEB = 5;
+    public static final Integer PAID_SCENE_WEI_XIN_JSAPI_MINI_PROGRAM = 6;
+    public static final Integer PAID_SCENE_ALIPAY_MOBILE_WEBSITE = 7;
+    public static final Integer PAID_SCENE_ALIPAY_PC_WEBSITE = 8;
+    public static final Integer PAID_SCENE_ALIPAY_APP = 9;
+    public static final Integer PAID_SCENE_ALIPAY_FAC_TO_FACE = 10;
 }

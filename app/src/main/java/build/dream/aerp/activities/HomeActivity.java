@@ -16,6 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import build.dream.aerp.R;
 import build.dream.aerp.api.ApiRest;
 import build.dream.aerp.constants.Constants;
@@ -28,12 +34,14 @@ import build.dream.aerp.eventbus.EventBusEvent;
 import build.dream.aerp.utils.ApplicationHandler;
 import build.dream.aerp.utils.DatabaseUtils;
 import build.dream.aerp.utils.EventBusUtils;
+import build.dream.aerp.utils.JacksonUtils;
 import build.dream.aerp.utils.StatusBarUtils;
 import build.dream.aerp.utils.ValidateUtils;
 
 public class HomeActivity extends AppCompatActivity {
     private Button logoutButton;
     private Button orderButton;
+    private Button weiXinPayButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,10 @@ public class HomeActivity extends AppCompatActivity {
 
         logoutButton = findViewById(R.id.activity_home_button_logout_button);
         orderButton = findViewById(R.id.activity_home_button_order_button);
+        weiXinPayButton = findViewById(R.id.activity_home_button_wei_xin_pay_button);
+
+        final Tenant tenant = DatabaseUtils.find(this, Tenant.class);
+        final Branch branch = DatabaseUtils.find(this, Branch.class);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +72,31 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        Branch branch = DatabaseUtils.find(this, Branch.class);
+        weiXinPayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println(UUID.randomUUID().toString());
+
+                Map<String, Object> bodyMap = new HashMap<String, Object>();
+                bodyMap.put("tenantId", tenant.getId());
+                bodyMap.put("branchId", branch.getId());
+                bodyMap.put("vipId", 1);
+                bodyMap.put("dietOrderId", 1);
+
+                Map<String, Object> paymentInfo = new HashMap<String, Object>();
+                paymentInfo.put("paymentCode", Constants.PAYMENT_CODE_WX);
+                paymentInfo.put("paidAmount", 0.01);
+                paymentInfo.put("paidScene", Constants.PAID_SCENE_WEI_XIN_APP);
+
+                List<Map<String, Object>> paymentInfos = new ArrayList<Map<String, Object>>();
+                paymentInfos.add(paymentInfo);
+
+                bodyMap.put("paymentInfos", paymentInfos);
+
+                ApplicationHandler.accessAsync(ApplicationHandler.obtainAccessToken(HomeActivity.this), Constants.EVENT_TYPE_CATERING_DIET_ORDER_DO_PAY_COMBINED, JacksonUtils.writeValueAsString(bodyMap), Constants.METHOD_TYPE_CATERING_DIET_ORDER_DO_PAY_COMBINED);
+            }
+        });
+
         TextView branchNameTextView = findViewById(R.id.activity_home_text_view_branch_name);
         branchNameTextView.setText(branch.getName());
 
@@ -122,6 +158,10 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        }
+
+        if (Constants.METHOD_TYPE_CATERING_DIET_ORDER_DO_PAY_COMBINED.equals(type)) {
+            int a = 100;
         }
     }
 
